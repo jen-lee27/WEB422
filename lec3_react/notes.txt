@@ -1,0 +1,16 @@
+1. npm --version
+2. npm init react-app my_app
+3. cd my_app
+4. npm start
+
+5. removed everything in public folder except favicon.ico and index.html
+6. removed everything in src folder
+7. added index.js in src folder
+
+8. to use bootstrap -> npm install bootstrap
+	* npm audit fix --force
+		to force it to install disregarding versions
+
+
+sometimes bootstrap gives ssl errors with react. To solve it type the following in bash terminal:
+export NODE_OPTIONS=--openssl-legacy-provider

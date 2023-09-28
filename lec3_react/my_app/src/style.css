@@ -1,0 +1,9 @@
+html, body {
+    height: 100%;
+}
+body {
+    /* to hide the scroll bar */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
