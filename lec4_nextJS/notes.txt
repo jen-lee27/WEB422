@@ -1,0 +1,35 @@
+to start building with next JS:
+npx create-next-app my_app --use-npm
+1. typescript? no (we'll use javascript)
+2. eslint? yes
+3. tailwind css? no
+4. src/ directory? no
+5. app router? yes
+6. import alias? no
+
+nextJS is useful especially for routing!
+notice we don't have index.html, because this will be rendered on the server. The server doesn't require an html because it doesn't have to run this application inside the browser. However, this whole application will be converted by next.js framework into an html and css code and will be sent to the client when requested by the client.
+
+
+* always navigate to the folder created after using the command above
+cd my_app
+
+to start:
+npm run dev OR npm start
+
+to install bootstrap:
+npm install bootstrap
+
+import React from "react"
+import 'bootstrap/dist/css/bootstrap.min.css'
+
+
+
+When attempting to add an onClick event on a button, you'll get the following error msg:
+Unhandled Runtime Error
+Error: Event handlers cannot be passed to Client Component props.
+  <button type="button" className=... onClick={function} children=...>
+                                              ^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+
+It's complaining because onClick is a client-side code while the whole code is run on the server. Therefore whenever you have client-side code, you need to tell next.js that this code needs to run on client by writing "use client" at the very top of the file (where imports are written)

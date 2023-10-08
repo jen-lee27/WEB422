@@ -1,4 +1,6 @@
 1. npm --version
+	* to install a specific version of npm (ex. ver 10.1.0):
+		npm install -g npm@10.1.0
 2. npm init react-app my_app
 3. cd my_app
 4. npm start

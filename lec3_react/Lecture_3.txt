@@ -1,0 +1,526 @@
+1. Update your npm if necessary using the following command:
+	
+	npm install -g npm@10.1.0
+	
+2. Once updated, use npm to create a react app
+
+	npm init react-app myapp
+
+This might take some time as it would install few libraries to run your react app. Once installed, you'll see several folders in the file explorer.
+
+3. Go inside your react app directory using
+
+	cd myapp
+	
+4. Start your react app using the following command
+
+	npm start
+
+This will open a browser and run your react app
+
+5. Lets now create a React app by clearing up some mess from the project created for us. Clear the folder so that:
+	- public folder has only react logo (favicon.ico) and index.html
+	- src has no file in it.
+	
+Now we'll create a new file in src folder called index.js which has the following code:
+
+	import React from "react"
+	import ReactDOM from "react-dom"
+
+	ReactDOM.render(<h1>Hello React</h1>, document.getElementById("root"))
+
+First argument of render function can hold other HTML elements as well, e.g., as below
+
+	ReactDOM.render(<p>Hello, this is a paragraph</p>, document.getElementById("root"))
+	
+	or
+	
+	ReactDOM.render(<img src="favicon.ico" />, document.getElementById("root"))
+	
+	or 
+	
+	ReactDOM.render(<ul><li>Item 1</li><li>Item 2</li></ul>, document.getElementById("root"))
+	
+6. Instead of cluttering the render function, elements can be moved out into their separate components as well
+
+	import React from "react"
+	import ReactDOM from "react-dom"	
+
+	const unorderedList = (<ul><li>Item 1</li><li>Item 2</li></ul>)
+
+	ReactDOM.render(unorderedList, document.getElementById("root"))
+	
+These HTML style elements are actually called JSX (Javascript Xtensions) which help you provide your html like components inside JS
+
+7. Custom components help in maintaining the code. So above code can be written as 
+
+	function UnorderedList()
+	{
+		return (
+			<ul><li>Item 1</li><li>Item 2</li></ul>
+		);
+	}
+
+	ReactDOM.render(
+		UnorderedList(),
+		document.getElementById("root")
+	)
+	
+How some conventions are used in React as below to call function as tags
+
+	function UnorderedList()
+	{
+		return (
+			<ul><li>Item 1</li><li>Item 2</li></ul>
+		);
+	}
+
+	ReactDOM.render(
+		<UnorderedList />,
+		document.getElementById("root")
+	)
+
+8. We can bundle multiple components into a tag to render function as below
+
+	function Header()
+	{
+		return (
+			<h1>Hello React</h1>
+		);
+	}
+
+	function UnorderedList()
+	{
+		return (
+			<ul><li>Item 1</li><li>Item 2</li></ul>
+		);
+	}
+
+	ReactDOM.render(
+		<div>
+			<Header />
+			<UnorderedList />
+		</div>,
+		document.getElementById("root")
+	)
+
+9. Bootstrap can be used with React. Follow the steps below to set it up with React
+	- On your terminal type: npm install bootstrap
+	- add this line to index.js: import 'bootstrap/dist/css/bootstrap.min.css';
+	- Finally copy the navbar code from bootstrap into NavBar custom component as below
+	
+	import React from "react"
+	import ReactDOM from "react-dom"
+	import 'bootstrap/dist/css/bootstrap.min.css';
+
+	function NavBar()
+	{
+		return (
+			<nav class="navbar navbar-expand-lg bg-body-tertiary">
+				<div class="container-fluid">
+					<a class="navbar-brand" href="#">Navbar</a>
+					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="#">Home</a>
+						</li>
+						<li class="nav-item">
+						<a class="nav-link" href="#">Link</a>
+						</li>
+						<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							Dropdown
+						</a>
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item" href="#">Action</a></li>
+							<li><a class="dropdown-item" href="#">Another action</a></li>
+							<li><hr class="dropdown-divider" /></li>
+							<li><a class="dropdown-item" href="#">Something else here</a></li>
+						</ul>
+						</li>
+						<li class="nav-item">
+						<a class="nav-link disabled" aria-disabled="true">Disabled</a>
+						</li>
+					</ul>
+					<form class="d-flex" role="search">
+						<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+						<button class="btn btn-outline-success" type="submit">Search</button>
+					</form>
+					</div>
+				</div>
+			</nav>
+		);
+	}
+
+
+	ReactDOM.render(
+		<div>
+			<NavBar />
+		</div>,
+		document.getElementById("root")
+	)
+	
+If an error of openSSL occurs, type the following in the terminal
+
+	export NODE_OPTIONS=--openssl-legacy-provider
+
+This would simply generate a webpage with the navbar from bootstrap.
+
+10. It is a good idea to separate the components into their separate .js files.
+
+Navbar.js
+
+	import React from "react"
+	import 'bootstrap/dist/css/bootstrap.min.css';
+
+	export default function NavBar()
+	{
+		return (
+			<nav class="navbar navbar-expand-lg bg-body-tertiary">
+				<div class="container-fluid">
+					<a class="navbar-brand" href="#">Navbar</a>
+					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="#">Home</a>
+						</li>
+						<li class="nav-item">
+						<a class="nav-link" href="#">Link</a>
+						</li>
+						<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							Dropdown
+						</a>
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item" href="#">Action</a></li>
+							<li><a class="dropdown-item" href="#">Another action</a></li>
+							<li><hr class="dropdown-divider" /></li>
+							<li><a class="dropdown-item" href="#">Something else here</a></li>
+						</ul>
+						</li>
+						<li class="nav-item">
+						<a class="nav-link disabled" aria-disabled="true">Disabled</a>
+						</li>
+					</ul>
+					<form class="d-flex" role="search">
+						<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+						<button class="btn btn-outline-success" type="submit">Search</button>
+					</form>
+					</div>
+				</div>
+			</nav>
+		);
+	}
+	
+Content.js
+
+	import React from "react"
+	import 'bootstrap/dist/css/bootstrap.min.css';
+	export default function Content()
+	{
+		return (
+				<div className="container d-flex flex-column vh-100 justify-content-center align-items-center">
+					<img src="../images/google.png" alt="Google Logo" width={"400px"} height={"100px"} />
+				</div>
+		);
+	}
+	
+index.js
+
+	import React from "react"
+	import ReactDOM from "react-dom"
+	import NavBar from "./NavBar"
+	import Content from "./Content"
+	import "./style.css"
+
+
+	ReactDOM.render(
+		<div>
+			<NavBar />
+			<Content />
+		</div>,
+		document.getElementById("root")
+	)
+	
+style.css
+
+	html, body {
+		height: 100%;
+	  }
+	  
+	  body {
+		display: flex;
+		flex-direction: column;
+		overflow:hidden;
+	  }
+
+11. Using JSX is pretty common in React and can help in achieving a lot of things. Below we have created a component which has a variable introduced and using {}, we have dyanmically allocated a value to h3.
+
+function Message()
+{
+    const name = "John";
+    return (<h3>Hello {name}</h3>)
+}
+
+ReactDOM.render(
+    <div>
+        <NavBar />
+        <Message />
+        <Content />
+    </div>
+    , 
+    document.getElementById("root")
+)
+
+12. JSX can be used to do a lot things like adding conditional statements
+
+function Message()
+{
+    const name = "";
+    if (name){
+        return (<h3>Hello {name}</h3>)
+    }
+    return (<h3>No name specified</h3>)
+    
+}
+
+13. We can use JS arrays in JSX using bootstrap
+
+function ListGroup() {
+  const fruits = ["Apple", "Orange", "Banana", "Grapes"];
+
+  return (
+    <ul class="list-group">
+      {fruits.map((item) => (
+        <li className="list-group-item">{item}</li>
+      ))}
+    </ul>
+  );
+}
+
+13. Props are a way to provide more information to the components just like passing parameters to the functions
+
+function ListGroup(props) {
+  
+
+  return (
+    <>
+        <h1>{props.title}</h1>
+        <ul class="list-group">
+        {props.items.map((item) => (
+            <li className="list-group-item">{item}</li>
+        ))}
+        </ul>
+    </>
+
+  );
+}
+
+function CreateListGroupts()
+{
+    const fruits = ["Apple", "Orange", "Banana", "Grapes"];
+    const colors = ["Red", "Yellow", "Green"]
+    return (
+        <>
+            <ListGroup items={fruits} title="Fruits" />
+            <ListGroup items={colors} title="Colors"/>
+        </>
+    )
+}
+
+ReactDOM.render(
+  <div>
+    <NavBar />
+    <CreateListGroupts />
+    <Content />
+  </div>,
+  document.getElementById("root")
+);
+
+
+14. Lets now create Seneca Grocers web page using React
+
+index.js
+
+import React from "react";
+import ReactDOM from "react-dom";
+import NavBar from "./components/NavBar";
+import Banner from "./components/Banner";
+import Content from "./Content";
+import "./style.css";
+
+ReactDOM.render(
+  <div>
+    <NavBar />
+    <Banner />
+    <Content />
+  </div>,
+  document.getElementById("root")
+);
+
+NavBar.js
+
+import React from "react"
+import 'bootstrap/dist/css/bootstrap.min.css'
+
+export default function NavBar()
+{
+    return (<nav className="navbar navbar-expand-lg bg-body-tertiary">
+    <div className="container-fluid">
+      <img className="navbar-brand " src="../images/Seneca.png" width={"100px"} maxHeigh={"10px"}/>
+      <div className="row mx-auto">
+        <ul className="navbar-nav">
+          <li className="nav-item ">
+            <a className="nav-link active mx-2" aria-current="page" href="#">Home</a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link active mx-2" href="#">Shopping List</a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link active mx-2" href="#">Account</a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link active mx-2" href="#">About Us</a>
+          </li>
+          
+        </ul>
+        </div>
+    </div>
+  </nav>)
+}
+
+Banner.js
+
+import React from "react"
+import 'bootstrap/dist/css/bootstrap.min.css'
+
+export default function Banner()
+{
+    return (<div className="container-fluid text-center banner-props">
+        <img src="../images/banner.png" className="img-fluid"/>
+    </div>);
+}
+
+Content.js
+
+import React from "react"
+import 'bootstrap/dist/css/bootstrap.min.css'
+
+export default function Content()
+{
+    return (<div className="row mx-1 my-3">
+        <div className="col-md-2">
+            <div className="card card-props">
+                    <img src="../images/Banana.jpg"  width={"150px"} className="mx-auto"/>
+                    <div className="card-body d-flex flex-column align-items-center">
+                    <h5 className="card-title">Banana Bunch</h5>
+                    <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" className="btn btn-warning">Add to Cart</a>
+                    </div>
+            </div>
+        </div>
+        <div className="col-md-2">
+            <div className="card card-props">
+                    <img src="../images/Apple.jpg"  width={"120px"} className="mx-auto"/>
+                    <div className="card-body d-flex flex-column align-items-center">
+                    <h5 className="card-title">Apples</h5>
+                    <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" className="btn btn-warning">Add to Cart</a>
+                    </div>
+            </div>
+        </div><div className="col-md-2">
+            <div className="card card-props">
+                    <img src="../images/Grapes.png"  width={"165px"} className="mx-auto"/>
+                    <div className="card-body d-flex flex-column align-items-center">
+                    <h5 className="card-title">Green Grapes</h5>
+                    <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" className="btn btn-warning">Add to Cart</a>
+                    </div>
+            </div>
+        </div>
+        <div className="col-md-2">
+            <div className="card card-props">
+                    <img src="../images/Mango.png"  width={"120px"} className="mx-auto"/>
+                    <div className="card-body d-flex flex-column align-items-center">
+                    <h5 className="card-title">Alphonso Mango</h5>
+                    <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" className="btn btn-warning">Add to Cart</a>
+                    </div>
+            </div>
+        </div>
+
+        <div className="col-md-2">
+            <div className="card card-props">
+                    <img src="../images/Strawberry.png"  width={"120px"} className="mx-auto"/>
+                    <div className="card-body d-flex flex-column align-items-center">
+                    <h5 className="card-title">Strawberry</h5>
+                    <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" className="btn btn-warning">Add to Cart</a>
+                    </div>
+            </div>
+        </div>
+
+        <div className="col-md-2">
+            <div className="card card-props">
+                    <img src="../images/Pineapple.png"  width={"72px"} className="mx-auto"/>
+                    <div className="card-body d-flex flex-column align-items-center">
+                    <h5 className="card-title">Pine Apple</h5>
+                    <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" className="btn btn-warning">Add to Cart</a>
+                    </div>
+            </div>
+        </div>
+        
+        </div>
+    );
+}
+
+style.css
+
+
+body{
+    height:100%;
+    display: flex;
+    flex-direction: column;
+}
+.banner-props {
+    margin-left: 0;
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+  }
+.card-props{
+    width: 18rem;
+}
+
+
+index.html
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

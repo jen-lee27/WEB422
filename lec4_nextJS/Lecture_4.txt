@@ -1,0 +1,337 @@
+1. We are going to create react app using Next.js
+	
+	npx create-next-app my-app --use-npm
+	
+	Select Yes for ESLint and App Router only.
+	
+2. Go inside your react app directory using
+
+	cd myapp
+	
+3. Start your react app using the following command
+
+	npm run dev
+
+This will open a browser and run your react app
+
+4. Go to page.js file in app folder and replace the whole code with the following:
+	
+	import Image from 'next/image'
+	import styles from './page.module.css'
+
+	export default function Home() {
+	  return (
+		<main>
+		  <h1>Hello World</h1>
+		</main>
+	  )
+	}
+	
+	In order to avoid linear gradient applied to the body, go to globals.css and remove linear gradient for body and add some paddingBottom
+	
+	body {
+		color: rgb(var(--foreground-rgb));
+		padding: 1rem;
+	}
+	
+5. We can create components in Next.js as well, so lets create states.js in app folder with the following code:
+
+	"use client"
+	import React, { useState } from "react";
+	import 'bootstrap/dist/css/bootstrap.min.css';
+
+	export default function Content() {
+		const counter = 0;
+		return (
+		  <div className="d-flex align-items-center justify-content-center">
+			<button className="btn btn-primary" onClick={decrement}>Decrement</button>
+			<h1 className="mx-2">{counter}</h1>
+			<button className="btn btn-primary" onClick={increment}>Increment</button>
+		  </div>
+		);
+	  }
+	  
+	Add the following code to page.js
+	  
+	  
+	import Image from "next/image";
+	import styles from "./page.module.css";
+	import Content from "./states";
+
+
+
+	export default function Home() {
+	  return (
+		<main>
+		  <Content />
+		</main>
+	  );
+	}
+
+
+6. Lets add a click event to the increment button as below:
+
+	function Content() {
+	  let counter = 0;
+	  
+	  const increment = ()=>{
+		counter = counter + 1;
+		console.log(counter)
+	  }
+	  return (
+		<div className="d-flex align-items-center justify-content-center">
+		  <button className="btn btn-primary">Decrement</button>
+		  <h1 className="mx-2">{counter}</h1>
+		  <button className="btn btn-primary" onClick={increment}>Increment</button>
+		</div>
+	  );
+	}
+	
+	The above will not show the increment on the counter. However, if we check the console, counter is actually incrementing.
+	However, React is not rendering the component to its new value. In order to fix, we use states, in this case,
+	we'll use useState by importing import React, { useState } from "react";
+	
+		function Content() {
+		  const [counter, setCounter] = useState(0);
+		  
+		  const increment = ()=>{
+			setCounter(counter + 1);
+		  }
+		  return (
+			<div className="d-flex align-items-center justify-content-center">
+			  <button className="btn btn-primary">Decrement</button>
+			  <h1 className="mx-2">{counter}</h1>
+			  <button className="btn btn-primary" onClick={increment}>Increment</button>
+			</div>
+		  );
+		}
+		
+		Similarly, we can write decrement:
+		
+		function Content() {
+		  const [counter, setCounter] = useState(0);
+		  
+		  const increment = ()=>{
+			setCounter(counter + 1);
+		  }
+
+		  const decrement = ()=>{
+			setCounter(counter - 1);
+		  }
+		  return (
+			<div className="d-flex align-items-center justify-content-center">
+			  <button className="btn btn-primary" onClick={decrement}>Decrement</button>
+			  <h1 className="mx-2">{counter}</h1>
+			  <button className="btn btn-primary" onClick={increment}>Increment</button>
+			</div>
+		  );
+		}
+		
+	There is a slight problem in above program, e.g., if we call setCounter twice, it wont increment twice:
+	
+		const increment = ()=>{
+			setCounter(counter + 1);
+			setCounter(counter + 1);
+		}
+	This is because, the updated value of counter is not used. To fix this we can use below:
+	
+		function Content() {
+		  const [counter, setCounter] = useState(0);
+		  
+		  const increment = ()=>{
+			setCounter((prevState) => prevState + 1);
+			setCounter((prevState) => prevState + 1);
+		  }
+
+		  const decrement = ()=>{
+			setCounter((prevState) => prevState - 1);
+		  }
+		  return (
+			<div className="d-flex align-items-center justify-content-center">
+			  <button className="btn btn-primary" onClick={decrement}>Decrement</button>
+			  <h1 className="mx-2">{counter}</h1>
+			  <button className="btn btn-primary" onClick={increment}>Increment</button>
+			</div>
+		  );
+		}
+
+7. Lets now work with useStates and String. Lets create an input from bootstrap as below:
+
+		function Content() {
+		  return (
+			<div className="input-group mb-3">
+			  <span className="input-group-text" id="basic-addon1">
+				@
+			  </span>
+			  <input
+				type="text"
+				className="form-control-sm"
+				placeholder="Username"
+				aria-label="Username"
+				aria-describedby="basic-addon1"
+			  />
+			  <h4 className="mx-2 my-1">Hello</h4>
+			</div>
+			
+		  );
+		}
+	
+	We want to change the 'Hello' to a text entered by the user as soon as use starts entering data in the input:
+	
+	"use client"
+	import React, { useState } from "react";
+	import 'bootstrap/dist/css/bootstrap.min.css';
+
+	export default function Content() {
+			  
+		const [value, setValue] = useState("Default")
+
+		const onChange = (event) => {
+		  const newValue = event.target.value;
+		  setValue(newValue);
+		};
+
+		return (
+		  <div className="input-group mb-3">
+			<span className="input-group-text" id="basic-addon1">
+			  @
+			</span>
+			<input
+			  type="text"
+			  className="form-control"
+			  placeholder="Username"
+			  aria-label="Username"
+			  aria-describedby="basic-addon1"
+			  onChange={onChange}
+			/>
+			<h4 className="mx-2 my-1">{value}</h4>
+		  </div>
+		  
+		);
+	  }
+
+8. useEffect is pretty handy hook to render data at client side especially. For example, you can use it to fetch data from an API and update the component's state when the data arrives. 
+
+Lets update states.js with the following code
+
+	"use client";
+	import React, { useState, useEffect } from "react";
+	import "bootstrap/dist/css/bootstrap.min.css";
+
+	export default function Content() {
+	  const [post, setPost] = useState();
+
+	  useEffect(() => {
+		fetch(`https://jsonplaceholder.typicode.com/posts/1`)
+		  .then((res) => res.json())
+		  .then((data) => {
+			setPost(data);
+		  }, []);
+	  });
+	  return (<>
+		<strong>User ID:</strong> {post?.userId}<br />
+		<strong>Title:</strong> {post?.title}<br />
+		<strong>Body:</strong> {post?.body}<br />
+	  </>);
+	}
+	
+	This code uses useEffect to fetch data on the client side when this page is rendered.
+	
+9. Ternary operators are good to show data conditionally
+
+	export default function Content() {
+    const [students, setStudents] = useState([
+        { name: 'Steve', active: false, age: 32 },
+        { name: 'Bill', active: false, age: 41 },
+        { name: 'Jeff', active: true, age: 20 },
+      ]);
+
+    return (<>{students[2].active ? <p>{students[2].name} is active</p> : <p>Student in inactive</p>}</>);
+	}
+
+10. Filter function can be used on arrays for selection
+
+	"use client";
+	import React, { useState, useEffect } from "react";
+	import "bootstrap/dist/css/bootstrap.min.css";
+
+	export default function Content() {
+	  const [students, setStudents] = useState([
+		{ name: "Steve", active: false, age: 32 },
+		{ name: "Bill", active: false, age: 41 },
+		{ name: "Jeff", active: true, age: 20 },
+		{ name: "John", active: true, age: 21 },
+		{ name: "Angelina", active: true, age: 19 },
+	  ]);
+
+	  const activeStudents = students.filter((student) => student.active);
+
+	  return (
+		<ul className="list-group">
+		  {activeStudents.map((student, index) => (
+			<li className="list-group-item" key={index}>{student.name}</li>
+		  ))}
+		</ul>
+	  );
+	}
+
+11. Next.js makes routing very simple. You can simply create a folder inside the app folder and name it the route you want you page to be.
+For example, if you want to call your page as www.mypage.com/about then name your folder as about and return a component from there:
+Page name inside the about folder should be page.js to make it work.
+
+	app/about/page.js 
+
+	export default function About()
+	{
+		return (<img src="https://picsum.photos/200/300" class="img-fluid" alt=""></img>);
+	}
+	
+12. We can add links to the pages from other pages as well as below:
+
+	import Content from "./states";
+
+	export default function Home() {
+	  return (
+		<main>
+		  <Content />
+		  <a href="/about">About Us</a> // this is the reference to about page created earlier.
+		</main>
+	  );
+	}
+	
+13. The above approach is fine for linking pages but it would download most of the items required by the page every time page is loaded.
+This is not considered optimum. Better to use Link from Next.js to avoid downloading these items again.
+
+	import Content from "./states";
+	import Link from "next/link";
+
+	export default function Home() {
+	  return (
+		<main>
+		  <Content />
+		  <Link href="/about">About Us</Link>
+		</main>
+	  );
+	}
+
+14. Dynamic Routes are handy when you have to dynamically navigate to various pages. Follow the steps below:
+
+	1. Create a folder called users
+	2. Inside this folder create a page.js with the following content
+		export default function users() {
+		  return (
+			<>
+			  <h1>User 1</h1>
+			  <h1>User 2</h1>
+			  <h1>User 3</h1>
+			</>
+		  );
+		}
+	3. Inside users folder create a folder [id] and create page.js inside this folder as well with the following content
+	
+		export default function UserDetails({params})
+		{
+			return (<h1>Hello to users page {params.id}</h1>);
+		}
+
+		This will give you access to the page parameters

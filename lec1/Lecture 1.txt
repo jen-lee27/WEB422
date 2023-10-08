@@ -1,0 +1,177 @@
+1. Install Node.js (which also installs npm). Verify its status:
+
+node --version
+npm --version
+
+2. Create a new folder to hold the project.
+
+Navigate into that folder. Create an empty server.js file. Create an empty index.html file. It's also a good idea to create an empty README.md file.
+
+3. Now, initialize the folder as a Node.js app:
+
+npm init
+
+4. Make sure you specify server.js as its entry point. Add your name as the author name, and add a description if you wish. The other settings can stay at the suggested default values.
+
+Add Express.js:
+
+npm install express
+
+5. Open the server.js file for editing. Make it do something. For example:
+
+console.log('Hello, world!');
+
+Back in Terminal, run the app:
+
+node server.js
+
+It should respond with the console message, and then terminate.
+
+6. Instead of writing something on the console, we can work with getting the request from a browser and responding to the request
+
+const express = require('express')
+const path = require('path')
+
+const app = express()
+
+app.get('/', (req, res)=>{
+    res.send('Hello');
+    console.log('Client connected');
+})
+
+app.listen(5000, ()=>{
+    console.log('Ready to listen to request at port 5000')
+});
+
+7. We can also send status codes back to the client
+
+app.get('/', (req, res)=>{
+    res.sendStatus(500); // internal server error
+    console.log('Client connected');
+})
+
+8. Instead of sending status codes, its a good idea to send back a message with the status codes
+
+app.get('/', (req, res)=>{
+    res.status(500).send('Hello');
+    console.log('Client connected');
+})
+
+9. We do not necessarily have to always send text message, we can also send JSON, especially if we want to send message back from an API to a client which is not necessarily a browser
+
+app.get('/', (req, res)=>{
+    res.status(500).json({message: "Error"});
+    console.log('Client connected');
+})
+
+10. Update index.html using emmet to hold the following
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Server</title>
+</head>
+<body>
+    <h1>Hello to the index page</h1>
+</body>
+</html>
+
+11. Update the server.js to the following code to test if index page and errors are handled appropriately.
+
+const express = require('express')
+const path = require('path')
+
+const app = express()
+
+app.get('/', (req, res) =>{
+    res.status(200).sendFile(path.resolve(__dirname, 'index.html'))
+})
+
+// if none of the paths work, this would work
+app.all('*', (req, res)=>{
+    res.status(404).send('Page not found')
+})
+
+12. We can also provide multiple routes
+
+app.get('/', (req, res)=>{
+    res.status(200).sendFile(path.resolve(__dirname, 'index.html'))
+    console.log('Client connected');
+})
+
+app.get('/about', (req, res)=>{
+    res.send('About')
+    console.log('Client connected');
+})
+
+app.listen(5000, ()=>{
+    console.log('Ready to handle requests at port 5000')
+})
+
+13. Adding another function that would send an array back in json format to Thunder Client when Thunder Client hits at the following api: http://localhost:5000/api/fruits/
+
+const express = require('express')
+const path = require('path')
+const bodyParser = require('body-parser')
+
+const app = express()
+
+app.use(bodyParser.json());
+
+let fruits = ['Apple', 'Orange', 'Grape', 'Peach', 'Banana']
+
+app.get('/', (req, res) =>{
+    res.status(200).sendFile(path.resolve(__dirname, 'index.html'))
+})
+
+app.get('/api/fruits/', (req, res) =>{
+    res.json(fruits)
+})
+
+app.all('*', (req, res)=>{
+    res.status(404).send('Page not found')
+})
+
+app.listen(5000, ()=>{
+    console.log('Ready to handle requests at port 5000')
+})
+
+14. We can pass an index in the url to get the required fruit by passing the following URL to Thunder Client: http://localhost:5000/api/fruits/2
+
+app.get('/api/fruits/:fruitID', (req, res) =>{
+    let fid = req.params.fruitID;
+    fid = parseInt(fid);
+    console.log(fid)
+    res.json(fruits[fid]);
+   
+})
+
+15. POST method is used to add/submit data. This URL can be used from Thunder Client to submit data to server's fruits array. Make sure to add {"fruit":"Pine Apple"} to the Body in Thunder Client
+
+app.post('/api/fruits/', (req, res)=>{
+    res.status(201).json({"message": `${req.body.fruit} added to the fruits array`})
+    fruits.push(req.body.fruit);
+    console.log(fruits)
+})
+
+16. PUT method is used to modify the data at server. This URL can be used from Thunder Client to update the data at provided index with the data provided in the body: http://localhost:5000/api/fruits/2. This data is provided in the body: {"fruit":"Melon"}
+
+app.put('/api/fruits/:fruitID', (req, res)=>{
+    let fid = req.params.fruitID;
+    fid = parseInt(fid);
+    res.json({"message": `Fruit at ${fid} index updated to ${req.body.fruit}`})
+    fruits[fid] = req.body.fruit;
+    console.log(fruits)
+})
+
+17. delete is used to delete data from server. This URL can be used from Thunder Client to delete the data at provided index: http://localhost:5000/api/fruits/2
+
+app.delete('/api/fruits/:fruitID', (req, res)=>{
+    let fid = req.params.fruitID;
+    fid = parseInt(fid);
+    res.json({"message": `Fruit at ${fid} index deleted.`})
+    fruits.splice(fid, 1);
+    console.log(fruits)
+})
