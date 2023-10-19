@@ -1,0 +1,375 @@
+1. Uncontrolled Components are managed by components own internal state.
+
+	- Let's create a react app by using npm `init react-app myapp`
+	- Remove everything from App.js except the following code:
+		import './App.css';
+		
+		function App() {
+		  return (
+			<div className="App">
+		
+			</div>
+		  );
+		}
+	- Create a new folder inside src called `Components` and create a file `UnControlledForm.js`
+	- Add the following code to demonstrate uncontrolled components in react
+	
+		import React from "react"
+
+		export default function UnControlledForm()
+		{
+			const handleSubmit = (e) =>{
+				e.preventDefault();
+				console.log(e.target.elements.name.value);
+				console.log(e.target.elements.email.value);
+				console.log(e.target.elements.age.value);
+			}
+			return (
+				<form onSubmit={handleSubmit}>
+					<input name="name" input="text" placeholder="Name" />
+					<input name="email" input="text" placeholder="Email" />
+					<input name="age" input="number" placeholder="Age" />
+					<input type="submit" value="Submit" />
+				</form>
+			);
+		}
+		
+	- Call this component inside App.js as below after importing this component in App.js
+	
+		function App() {
+		  return (
+			<div className="App">
+				<UnControlledForm />
+			</div>
+		  );
+		}
+		
+	- This demonstrate how the components are handled when the form is submitted and that each component is not controlled by react states.
+	- UnControlledForm can also be re-written using React's createRef as below:
+		
+		export default function UnControlledForm()
+		{
+			const nameInput = React.createRef();
+			const emailInput = React.createRef();
+			const ageInput = React.createRef();
+
+			const handleSubmit = (e) =>{
+				e.preventDefault();
+				console.log(nameInput.current.value);
+				console.log(emailInput.current.value);
+				console.log(ageInput.current.value);
+			}
+			return (
+				<form onSubmit={handleSubmit}>
+					<input name="name" input="text" placeholder="Name" ref = {nameInput}/>
+					<input name="email" input="text" placeholder="Email" ref = {emailInput}/>
+					<input name="age" input="number" placeholder="Age" ref = {ageInput}/>
+					<input type="submit" value="Submit" />
+				</form>
+			);
+		}
+		
+2. Controlled Forms are managed by React State. Parent component updates state on user interaction.
+
+	- Add a new file ControlledForm.js in Components folder and add the following code:
+	
+		import React, { useState } from "react";
+
+		export default function ControlledForm() {
+		  const [name, setName] = useState("");
+		  const [email, setEmail] = useState("");
+		  const [age, setAge] = useState();
+
+		  const [ageError, setAgeError] = useState("");
+
+		  function handleEvent(e) {
+			if (e.target.name === "name") {
+			  console.log(e.target.name);
+			  const upName = e.target.value.toUpperCase();
+			  setName(upName);
+			} else if (e.target.name === "email") {
+			  setEmail(e.target.value);
+			} else if (e.target.name === "age") {
+			  setAge(e.target.value);
+
+			  if (e.target.value < 0) {
+				setAgeError("Age should be > 0");
+			  }
+			  else{
+				setAgeError("");
+			  }
+			}
+		  }
+
+		  return (
+			<form>
+			  <input
+				name="name"
+				type="text"
+				placeholder="Name"
+				value={name}
+				onChange={handleEvent}
+			  />
+			  <br />
+			  <input
+				name="email"
+				type="text"
+				placeholder="Email"
+				value={email}
+				onChange={handleEvent}
+			  />
+			  <br />
+			  <input
+				name="age"
+				type="number"
+				placeholder="Age"
+				value={age}
+				onChange={handleEvent}
+			  /> <h4>{ageError}</h4>
+			  <br />
+			  <button>Submit</button>
+			</form>
+		  );
+		}
+
+	- Add the component to App.js
+	
+		function App() {
+		  return (
+			<div className="App">
+			  <ControlledForm />
+			</div>
+		  );
+		}
+		
+3. Instead better to use react-hook-form which provide flexibilty for validation for multiple components.
+
+	- Lets create a eye-pleasing login page. Paste the following in index.html. This would help in getting the required icons
+	
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	
+	- Create style.css in src directory and add the following code
+	
+		body {
+		  color: #999;
+		  background: #f5f5f5;
+		  font-family: "Varela Round", sans-serif;
+		}
+		.form-control {
+		  box-shadow: none;
+		  border-color: #ddd;
+		}
+		.form-control:focus {
+		  border-color: #4aba70;
+		}
+		.login-form {
+		  width: 350px;
+		  margin: 0 auto;
+		  padding: 30px 0;
+		}
+		.login-form form {
+		  color: #434343;
+		  border-radius: 1px;
+		  margin-bottom: 15px;
+		  background: #fff;
+		  border: 1px solid #f3f3f3;
+		  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+		  padding: 30px;
+		}
+		.login-form h4 {
+		  text-align: center;
+		  font-size: 22px;
+		  margin-bottom: 20px;
+		}
+		.login-form .avatar {
+		  color: #fff;
+		  margin: 0 auto 30px;
+		  text-align: center;
+		  width: 100px;
+		  height: 100px;
+		  border-radius: 50%;
+		  z-index: 9;
+		  background: #4aba70;
+		  padding: 15px;
+		  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+		}
+		.login-form .avatar i {
+		  font-size: 62px;
+		}
+		.login-form .form-group {
+		  margin-bottom: 20px;
+		}
+		.login-form .form-control,
+		.login-form .btn {
+		  min-height: 40px;
+		  border-radius: 2px;
+		  transition: all 0.5s;
+		}
+		.login-form .close {
+		  position: absolute;
+		  top: 15px;
+		  right: 15px;
+		}
+		.login-form .btn {
+		  background: #4aba70;
+		  border: none;
+		  line-height: normal;
+		}
+		.login-form .btn:hover,
+		.login-form .btn:focus {
+		  background: #42ae68;
+		}
+		.login-form .checkbox-inline {
+		  float: left;
+		}
+		.login-form input[type="checkbox"] {
+		  margin-top: 2px;
+		}
+		.login-form .forgot-link {
+		  float: right;
+		}
+		.login-form .small {
+		  font-size: 13px;
+		}
+		.login-form a {
+		  color: #4aba70;
+		}
+		
+	- Add the following to LoginPage.js after creating it in src directory. Make sure to install bootstrap
+	
+		import React, { useState } from "react";
+		import "bootstrap/dist/css/bootstrap.min.css";
+
+		export default function LoginPage() {
+		  return (
+			<div className="login-form">
+			  <form>
+				<div className="avatar">
+				  <i className="material-icons">&#xE7FF;</i>
+				</div>
+				<h4 className="modal-title">Login to Your Account</h4>
+				<div className="form-group">
+				  <input
+					type="text"
+					className="form-control"
+					placeholder="Username"
+					required="required"
+				  />
+				</div>
+				<div className="form-group">
+				  <input
+					type="password"
+					className="form-control"
+					placeholder="Password"
+					required="required"
+				  />
+				</div>
+
+				<input
+				  type="submit"
+				  className="btn btn-primary btn-block btn-lg"
+				  value="Login"
+				/>
+			  </form>
+			</div>
+		  );
+		}
+		
+	The above will give us a login page to play with.
+	
+	- Lets now install react-hook-form using the following command
+	
+		npm i react-hook-form
+		
+	- We are now ready to use form hooks. Lets import useForm as below. We register inputs and give them default values.
+	
+		import React from "react";
+		import { useForm } from "react-hook-form";
+
+		export default function LoginPage() {
+		  const {
+			register,
+			handleSubmit,
+			formState: { errors },
+		  } = useForm({
+			defaultValues: {
+			  userName: "",
+			  password: "",
+			},
+		  });
+
+		  const onSubmit = (data) => {
+			console.log("Form data:", data);
+		  };
+
+		  return (
+			<div className="login-form">
+			  <form onSubmit={handleSubmit(onSubmit)}>
+				<div className="avatar">
+				  <i className="material-icons">&#xE7FF;</i>
+				</div>
+				<h4 className="modal-title">Login to Your Account</h4>
+				<div className="form-group">
+				  <input
+					type="text"
+					className="form-control"
+					placeholder="Username"
+					{...register("userName", { required: "This field is required" })}
+				  />
+				  <br />
+				  {errors.userName && (
+					<p className="error-message">{errors.userName.message}</p>
+				  )}
+				</div>
+				<div className="form-group">
+				  <input
+					type="password"
+					className="form-control"
+					placeholder="Password"
+					{...register("password", {
+					  minLength: {
+						value: 5,
+						message: "Min length should be 5",
+					  },
+					  validate: (value) => {
+						if (!/\d/.test(value)) {
+						  return "Password must contain at least one number";
+						}
+						return true;
+					  },
+					})}
+				  />
+				  <br />
+				  {errors.password && (
+					<p className="error-message">{errors.password.message}</p>
+				  )}
+				</div>
+
+				<input
+				  type="submit"
+				  className="btn btn-primary btn-block btn-lg"
+				  value="Login"
+				/>
+			  </form>
+			</div>
+		  );
+		}
+
+4. react-hook-form also provide a good way of watching a component through watch api.
+
+	- get watch api from useForm and console.log watch as below
+	
+		const {
+			register,
+			handleSubmit, watch,
+			formState: { errors },
+		  } = useForm({
+			defaultValues: {
+			  userName: "",
+			  password: "",
+			},
+		  });
+
+		console.log(watch())
+
+

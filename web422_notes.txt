@@ -6,3 +6,32 @@
 package.json: general information about the package
 package-lock.json: exactly the version of the packages/dependencies for this node app
 	** DO NOT touch this
+
+
+
+** create react app:
+npm init react-app my_app
+cd my_app
+npm start
+(if you get an openssl error, write : export NODE OPTIONS=--openssl-legacy-provider
+
+** create next.js app:
+npx create-next-app my_app --use-npm
+1. typescript? no (we'll use javascript)
+2. eslint? yes
+3. tailwind css? no
+4. src/ directory? no
+5. app router? yes
+6. import alias? no
+cd my_app
+npm run dev OR npm start
+
+
+
+
+LEC5
+=====
+react forms: ex. to avoid doing form validations for EVERY FIELD
+1. npm install react-hook-form
+2. import {useForm} from "react-hook-form"
+3. const {register, handleSubmit} = useForm();
