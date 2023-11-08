@@ -4,7 +4,7 @@ import "./style.css"
 import {useForm} from "react-hook-form"
 
 export default function RegistrationForm() {
-    const {register, handleSubmit, getValues, formState: {errors}} = useForm({defaultValues : {
+    const {register, handleSubmit, onChange, getValues, formState: {errors}} = useForm({defaultValues : {
         firstName: "",
         lastName: "",
         email: "",
@@ -39,7 +39,7 @@ export default function RegistrationForm() {
                             validate: (value) => {
                                 return validateNames(value, "First Name");
                             }
-                        })}
+                        })} onChange={onChange}
                     />
                     <br/>
                     {errors.firstName && (<p>{errors.firstName.message}</p>)}
@@ -81,7 +81,7 @@ export default function RegistrationForm() {
                             validate: (value) => {
                                 return validatePasswordMatch(value);
                             }
-                        })}
+                        })} onChange={onChange}
                     />
                     <br/>
                     {errors.password && (<p>{errors.password.message}</p>)}
@@ -89,7 +89,7 @@ export default function RegistrationForm() {
                     <div className="col">
                     <input type="text" tabIndex="5" className="form-control" placeholder="Confirm Password"
                         {...register("confirmPassword", {
-                            required: "Confirm Password is required"})}
+                            required: "Confirm Password is required"})} onChange={onChange}
                     />
                     <br/>
                     {errors.confirmPassword && (<p>{errors.confirmPassword.message}</p>)}

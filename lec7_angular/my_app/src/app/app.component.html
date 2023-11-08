@@ -1,0 +1,38 @@
+<h1>HEllo WOrld</h1>
+<!-- <h2>{{title}}</h2> -->
+<!-- <h3>{{title.toUpperCase()}}</h3> -->
+
+<hr>
+<app-header/>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-4 d-flex justify-content-center">
+      <app-labels texttt="This is label 1" colorrr="green"/>
+    </div>
+    <div class="col-md-4 d-flex justify-content-center">
+      <app-labels texttt="This is label2" colorrr="red"/>
+    </div>
+    <div class="col-md-4 d-flex justify-content-center">
+      <app-labels texttt="this is label3" colorrr="blue"/>
+    </div>
+  </div>
+</div>
+
+<!-- [age] will convert "55" into numbers -->
+<!-- <app-cards title="Steve Jobs" [age]="55"/> -->
+<!-- <app-cards title="Bill Gates" [age]="65"/> -->
+<!-- <app-cards title="Elon Musk" [age]="45"/> -->
+
+<div *ngFor="let data of cardDataaa">
+  <!-- Method 1: using div -->
+  <!-- <div *ngIf="data.age > 0"> -->
+    <!-- <app-cards [title]="data.title" [age]="data.age"/> -->
+    <!-- [title] and [age] needs to be in square brackets
+      whenever you're using *ngFor because they are in arrays -->
+  <!-- </div> -->
+
+  <!-- Method 2: without using div -->
+  <ng-container *ngIf="data.age > 0">
+    <app-cards [title]="data.title" [age]="data.age"/>
+  </ng-container>
+</div>

@@ -1,0 +1,71 @@
+/* You can add global styles to this file, and also import other style files */
+html, body {
+    height: 100%;
+}
+.document {
+    background-color: #fdf7f1;
+}
+nav.navbar {
+    border-bottom: 2px solid #eae9e5;
+    padding: 0;
+}
+.nav-link {
+    color: #000;
+}
+
+.welcome.card, .welcome .card {
+    border: none;
+}
+
+.card.talent-card {
+    width: 17em;
+    padding: 20px 50px;
+    background-color: #c5f8c5;
+    border: none;
+}
+.talent-card .role {
+    font-size: 12px;
+}
+.talent-card .card-img-top {
+    border-radius: 50%;
+    width: 10em;
+    margin: 0 auto;
+}
+.talent-card h5,p {
+    margin: 0;
+    padding-bottom: .2em;
+}
+.talent-card > div img {
+    width: 2em;
+}
+.talent-card a {
+    display: block;
+}
+  
+.card.bg-green {
+    background-color: #c5f8c5;
+}
+.card.bg-yellow {
+    background-color: #f6f6be;
+}
+.card.bg-blue {
+    background-color: #c1ccf3;
+}
+
+.footer {
+    background-color: #333;
+    color: #fff;
+    padding: 1em;
+}
+.footer ul li {
+    list-style: none;
+}
+.footer-sub {
+    background-color: #aaa;
+    padding: 0.5em;
+}
+
+.bio-area {
+    max-width: 90vw;
+    margin: 0 auto;
+}

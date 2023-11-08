@@ -1,0 +1,15 @@
+<h1>Hello World</h1>
+<div class="container text-center my-3">
+  <app-paragraph #para/>
+  <!-- <app-button (textChangedd)="para.updateTextt()"/> -->
+  <app-button text="Increment" (textChangedd)="para.increment()"/>
+</div>
+
+<div class="container text-center my-3">
+  <!-- <app-list #list/>
+  <app-button (populateListEvent)="list.populateList()"/> -->
+
+  <app-list [cities]="citiesArr" #list/>
+  <app-button text="Populate List" (click)="populateList()"/>
+  <app-button text="Style List" (styleListEvent)="list.setStyle()"/>
+</div>

@@ -14,6 +14,10 @@ npm init react-app my_app
 cd my_app
 npm start
 (if you get an openssl error, write : export NODE OPTIONS=--openssl-legacy-provider
+	-> another solution, put this in the json:
+		terminal.integrated.env.windows": {
+      			"NODE_OPTIONS": "--openssl-legacy-provider"
+		}
 
 ** create next.js app:
 npx create-next-app my_app --use-npm
@@ -35,3 +39,85 @@ react forms: ex. to avoid doing form validations for EVERY FIELD
 1. npm install react-hook-form
 2. import {useForm} from "react-hook-form"
 3. const {register, handleSubmit} = useForm();
+
+
+
+LEC7
+=====
+It's difficult to configure your angular app, so don't do it manually!
+Instead, use the angular CLI (Command-Line Interface):
+	npm install -g @angular/cli
+		-> this is not creating an angular "app"! It's just installing the CLI which will help us to create the angular app, to run it, etc.
+
+Now, create a new angular app:
+	ng new my_app
+		add angular routing? n (no for now, because we're not going to work with routing today)
+		stylsheet format? css
+
+to run:
+	cd my_app
+	ng serve
+
+npm install bootstrap
+and instead of importing it inside every file, go to angular.json -> under architect -> build -> add "./node_modules/bootstrap/dist/css/bootstrap.min.css" inside "styles" -> and "./node_modules/bootstrap/dist/js/bootstrap.bundle.js" inside "scripts"
+
+to add another component, open another bash terminal and type:
+	cd my_app
+	ng generate component components/header
+which will create a "header" component under the "components" folder
+
+to use this newly created component, go to app.component.html and add <app-header/>
+	where app-header comes from "selector" in header.component.ts
+
+
+
+
+
+LEC8
+====
+Example1: When the "Click Me" Button that resides within BUTTON component is clicked, update the text in the PARAGRAPH component
+	1. create a button component with "ng generate component components/button"
+		1.1 write the HTML for button in the html
+		1.2 write (click)="onClikk()" where onClikk() can be of any name I want
+		1.3 inside the ts file, write the onClikk() function:
+			onClickk() {
+			    console.log("button clicked!");
+			}
+	2. create a paragraph component with "ng generate component components/paragraph"
+		2.1 inside the HTML, we'll have <p>{{textt}}</p>
+		2.2 inside the ts, write @Input() textt: string = "Default Text";
+			and make sure to import "Input" as well at the top:
+				import { Component, Input } from '@angular/core';
+	3. at this moment, the button component and the paragraph component will keep whatever happens to only themselves and they have no interactions/connections with each other
+	4. import Output and EventEmitter in the button ts:
+		import { Component, Output, EventEmitter } from '@angular/core';
+			This Output will "shout out" (or "emit") when something happened to that component
+		4.1 make sure to also add:
+			@Output() textChangedd = new EventEmitter();
+				inside the export class block
+		4.2 also update onClikk function:
+			onClickk() {
+			    console.log("button clicked!");
+			    this.textChangedd.emit(); //shout-out!!!
+			}
+		4.3 inside the PARAGRAPH ts, add:
+			updateTextt() {
+   			   this.textt = "Text is updated!";
+			}
+	5. They are ready to interact with each other now, but they are still not interacting. We can only make the interaction happen inside the app component where BOTH of them are being called (ie. where they can "see" each other)
+	6. Inside app.html, update the code:
+		<h1>Hello World</h1>
+		<div class="container text-center my-3">
+		  <app-paragraph/>
+		  <app-button (textChangedd)="updateTextt()"/>
+		</div>
+	such that upon textChangedd event, we will call updateTextt() function.
+		6.2 The problem is, button component knows nothign about updateTextt() function, because that function resides within the paragraph component
+		6.3 to work around this, "tag" the component:
+			<app-paragraph #para/>
+		6.4 and we're now going to use the tag to tell where to find updateTextt() function:
+			<app-button (textChangedd)="para.updateTextt()"/>
+
+Example2: Implement a counter program that increments everytime a button is clicked
+Example3: whenever a button is clicked, populate a list
+Example4: change the style when a button is clicked

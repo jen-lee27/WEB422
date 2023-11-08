@@ -1,0 +1,27 @@
+<div class="document">
+  <app-nav-bar/>
+
+  <div class="container-fluid py-4">
+    <h2>Hi, Jonathan</h2>
+    <div class="welcome card mt-4">
+      <div class="d-flex justify-content-between py-3 px-4">
+        <app-welcome-card class="card col-4 mx-2" title="Welcome to Hire4U" desc="As a premium employer, you have full access to all the premium features of this portal. Please feel navigate through various components of this portal to get maximum benefit. Do not hesitate to contact us if you have any queries."/>
+        <app-welcome-card class="card col mx-2 text-center bg-green" title="Hire Talent" desc="Hire from the pool of talents from all over the world." buttonClass="btn btn-dark" link="Browse Talent"/>
+        <app-welcome-card class="card col mx-2 text-center bg-yellow" title="Refer and Earn" desc="Earn discounts on your next hire by referring to your fellows." buttonClass="btn btn-dark" link="Earn Today"/>
+        <app-welcome-card class="card col mx-2 text-center bg-blue" title="Join Employer's Club" desc="Get more benefits by joining a vibrant community of employers." buttonClass="btn btn-dark" link="Join Club"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid py-4">
+    <h3>Trending Talents</h3>
+    <div class="mt-4 d-flex justify-content-around">
+      <app-talent-card *ngFor="let name of names; let i=index"
+        [image]="images[i]" [name]="name" [job]="jobs[i]" [rate]="rates[i]"
+        (profileClick)="bio.updateBio(bios[i], name, jobs[i])"/>
+    </div>
+    <app-bio-area #bio/>
+  </div>
+
+  <app-footer/>
+</div>

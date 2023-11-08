@@ -1,0 +1,267 @@
+	1. Angular is a framework that helps in creating single page dynamic web apps. Some differences between React and Angular
+	- Angular is a complete framework where as React is packaged with other libraries
+	- Angular uses two-way data binding whereas React offers one-way data binding
+	- Angular has better testing and debugging tools than React
+	- Angular is suited for creating large-scale, feature rich single page apps whereas React can be used for native, hybrid and web apps
+	- Angular uses Typescript, React uses Javascript
+	- Angular has much wider community support than React
+
+2. In order to create Angular apps, the Angular CLI is the fastest, straightforward, and recommended way to develop Angular applications.
+	- Use the following command to install Angular CLI
+
+		npm install -g @angular/cli
+	
+	- Use the following command to create an Angular App
+	
+		ng new my-app
+	
+	- Once installed, cd into the app and run the following command to run the Angular app
+	
+		ng serve
+	
+	Click on the link in VSCode terminal to show the output.
+	
+3. app instead src is the main folder for all the app components. Below are some details for some of the files:
+
+	- index.html is the main html file that Angular uses to show the results in the form of html
+		- This contains only a component (<app-root>) in the body (similar to React apps)
+	- main.ts is a typescript file that serves as a starting point for an Angular app much similar to some other programming languages
+		- main.ts calls in a module to run (AppModule)
+	- The AppModule called by the main method is inside the app folder under App.module.ts file	
+		- This is Angular's way of creating modules that can have multiple components in them
+	- Modules normally call components and in this case AppModule calls AppComponent
+	- app.component.ts contains the details of AppComponent
+		- Each component class has a Component decorator which has 3 things:
+			- selector: This tells how the HTML tag will be used for this component, e.g., app-root which was used in the body section of index.html
+			- templateUrl: Where to find the design (template) for this component
+			- styleUrls: Where to find the css styles for this component
+		- AppComponent class would hold all the members and member functions.
+		
+4. Lets make some changes to the default Angular app
+
+	- Go to index.html and change the title to "Seneca". This would change the title of the web pageX
+	- Go to src/app/app.component.html and remove everything and type
+	
+		<h1>Hello World</h1> 
+	
+	- We can also use String interpolation by putting the following code in html where `title` is defined in AppComponent class
+	
+		<h1>{{ title }}</h1>
+		
+	- We can use pretty much all Javascript inside two curly braces, e.g., using Javascript function as beloq
+	
+		<h1>{{ title.toUpperCase() }}</h1>
+	
+5. We can also use Bootstrap framework with Angular. Follow the steps below to include Bootstrap in an Angular app
+
+	- install bootstrap using
+	
+		npm install bootstrap
+		
+	- Once installed, add Bootstrap support to styles in angular.json under architect build
+	
+		"styles": [
+              "src/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+            ],
+		
+		if required add bootstrap javascript as well
+		
+		"scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
+	
+	- Test you app by putting any Bootstrap component, e.g., card, NavBar etc.
+	
+6. Angular works with components and its a good idea to have separate components do different things and reuse them wherever possible.
+
+	- Lets create a new component in Angular by typing the following command in terminal
+	
+		ng generate component components/header
+		
+	The above command will create a new Angular component called Header inside a new folder called component
+	
+	- Header component is expected to have 4 files in its directory very similar to AppComponent
+		- header.component.css : Contains the styles for this specific component
+		- header.component.html: Contains the design (template) for this component
+		- header.component.spec.ts : Code for testing this component
+		- header.component.ts: Contains the actual Typescript code for this component along with decorators
+		
+	- Once the component is created, we can call this component in our AppComponents HTML file using it tag. So place this code in app.component.html
+	
+		<app-header />
+		
+	- Since our Header component is expected to take care of the header, why not to bring title from AppComponent and place it in HeaderComponent so that we can access it in our header.component.ts
+	
+		import { Component } from '@angular/core';
+
+		@Component({
+		  selector: 'app-header',
+		  templateUrl: './header.component.html',
+		  styleUrls: ['./header.component.css']
+		})
+		export class HeaderComponent {
+		  title = 'Seneca App';
+		}
+	
+	- Lets now update header.component.html as below and rerun our app if its not running
+	
+		<h1>{{ title }}</h1>
+		
+	We can update this html file using all bootstrap components as per need, e.g., using a container
+	
+		<div class="container-fluid border mx-3 my-3 text-center">
+			<h1>{{ title }}</h1>
+		</div>
+		
+7. Angular components are reusable and that is a big advantage as all the components work independently.
+
+	- Lets create a new component called labels using the following command:
+	
+		ng generate component components/labels
+		
+	- Once created, in app.component.html, lets add the tag for this component under app-header as below:
+	
+		<app-header />
+		<app-labels />
+		
+	- If I want to create 3 labels with same behaviour but different properties, I can do that by simply making this label a generic one and passing props to it as below:
+	
+		<app-labels text="This is Label 1" color="red"></app-labels>
+		
+	- In labels.component.ts, in LabelsComponent class I can get these props using @Input directive as below:
+	
+		export class LabelsComponent {
+		  @Input() text: string = '';
+		  @Input() color: string = '';
+		}
+	
+	- Finally, in labels.component.html, I can design this component's UI:
+	
+		<p [ngStyle]="{ color: color }">{{ text }}</p>
+		
+	- Now if I want to reuse this component to create 2 more paragraphs (labels), I can do that by simply calling tags for this component in app.component.html
+	
+		<app-header />
+		<div class="container-fluid my-4">
+			<div class="row">
+			  <div class="col-md-4 d-flex justify-content-center">
+				<app-labels text="This is Label 1" color="red"></app-labels>
+			  </div>
+			  <div class="col-md-4 d-flex justify-content-center">
+				<app-labels text="This is Label 2" color="green"></app-labels>
+			  </div>
+			  <div class="col-md-4 d-flex justify-content-center">
+				<app-labels text="This is Label 3" color="blue"></app-labels>
+			  </div>
+			</div>
+		  </div>
+		
+		This gives a lot of flexibility when it comes to reusability.
+	
+8. Lets make use of Bootstrap and design some cards with data
+
+	- Create a cards component using the following command:
+	
+		ng generate component components/cards
+		
+	- In cards.components.html, put the following code:
+	
+		<div
+		  class="card-body rounded d-flex flex-column align-items-center"
+		  style="background-color: rgba(175, 169, 235, 0.8)"
+		>
+		  <h3 class="card-title text-center my-3">{{ title }}</h3>
+		  <h3 class="card-title text-center my-3">{{ age }}</h3>
+		</div>
+		
+	- In cards.component.ts put the following code:
+	
+		import { Component, Input } from '@angular/core';
+
+		@Component({
+		  selector: 'app-cards',
+		  templateUrl: './cards.component.html',
+		  styleUrls: ['./cards.component.css']
+		})
+		export class CardsComponent {
+		  @Input() title: string = '';
+		  @Input() age: number = 0;
+		}
+		
+	- Finally, lets call the app-cards component in app.component.html
+		
+		<div class="row my-5 justify-content-center">
+		  <app-cards title="Steve Jobs" [age]="55" class="col-md-3"></app-cards>
+		</div>
+		
+	- We can add more app-cards to AppComponent as below
+	
+		<div class="row my-5 justify-content-center">
+		  <app-cards title="Steve Jobs" [age]="55" class="col-md-3"></app-cards>
+		  <app-cards title="Bill Gates" [age]="65" class="col-md-3"></app-cards>
+		  <app-cards title="Elon Musk" [age]="75" class="col-md-3"></app-cards>
+		</div>
+
+	
+9. Lets make this a bit more interesting by not hard coding the data and getting all the data from an array in a parent component:
+
+	- Create some dummy data in app.component.html
+	
+		import { Component, Input } from '@angular/core';
+
+		@Component({
+		  selector: 'app-root',
+		  templateUrl: './app.component.html',
+		  styleUrls: ['./app.component.css'],
+		})
+		export class AppComponent {
+		  cardData = [
+			{ title: 'Steve Jobs', age: 55 },
+			{ title: 'Bill Gates', age: 65 },
+			{ title: 'Elon Musk', age: 49 },
+		  ];
+		}
+		
+	- Design UI for AppComponent which is going to hold the app-cards. Since, we are taking data from an array, we use *ngFor, an Angular based for loop
+	
+		<div class="row my-5 justify-content-center">
+		  <div *ngFor="let data of cardData" class="col-md-3">
+			<app-cards [title]="data.title" [age]="data.age"></app-cards>
+		  </div>
+		</div>
+		
+	- Make sure to have title and age variables in CardsComponent
+	
+		import { Component, Input } from '@angular/core';
+
+		@Component({
+		  selector: 'app-cards',
+		  templateUrl: './cards.component.html',
+		  styleUrls: ['./cards.component.css']
+		})
+		export class CardsComponent {
+		  @Input() title: string = '';
+		  @Input() age: number = 0;
+		}
+		
+	- Finally, to generate a UI for app-cards (CardsComponent) we use the following code
+		
+		<div
+		  class="card-body rounded d-flex flex-column align-items-center"
+		  style="background-color: rgba(175, 169, 235, 0.8)"
+		>
+		  <h3 class="card-title text-center my-3">{{ title }}</h3>
+		  <h3 class="card-title text-center my-3">{{ age }}</h3>
+		</div>
+
+10. We can also use *ngIf as below to show us cards only if the age is > 0
+
+	<app-header />
+	<div class="row my-5 justify-content-center">
+	  <div *ngFor="let data of cardData" class="col-md-3">
+		<ng-container *ngIf="data.age > 0">
+		  <app-cards [name]="data.title" [age]="data.age"></app-cards>
+		</ng-container>
+	  </div>
+	</div>

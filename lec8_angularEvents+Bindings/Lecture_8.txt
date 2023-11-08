@@ -1,0 +1,439 @@
+1. Button components can be created in Angular just like any other component and can be be reused.
+
+	- Create a new Angular app by typing the following command:
+	
+		ng new my-app
+	
+	- Once installed, cd into the app and run the following command to run the Angular app and Click on the link in VSCode terminal to show the output.
+	
+		ng serve
+		
+	- Make sure to install and setup Bootstrap in this app. Refer to the last lecture notes for more info.
+	
+	- Create a new Angular component using the following command:
+	
+		ng generate component components/buttons
+		
+	- Inside buttons.component.html code a Bootstrap button as below:
+	
+		<button type="button" class="btn btn-primary">Click Me!</button>
+
+	- Remove all the content of app.component.html and call the app-buttons component in it as below:
+	
+		<div class="container text-center my-3">
+			<app-buttons />
+		</div>
+		
+	We now have a working button on out web-page. Lets put this button to work.
+	
+	- Add a click event to this button in buttons.component.html:
+	
+		<button type="button" class="btn btn-primary" (click)="onClick()">
+		  Click Me!
+		</button>
+		
+	- The above step now requires us to create an onClick() function for this button which can be done in buttons.component.ts
+	
+		import { Component } from '@angular/core';
+
+		@Component({
+		  selector: 'app-buttons',
+		  templateUrl: './buttons.component.html',
+		  styleUrls: ['./buttons.component.css']
+		})
+		export class ButtonsComponent {
+
+		  onClick()
+		  {
+			console.log("Button Clicked");
+		  }
+
+		}
+		
+2. Buttons can help us trigger any event we want. For example, we can click a button and trigger an event that can change text of a paragraph:
+
+	- In buttons.component.html we have the following code where an event is triggered on click of the button:
+	
+		<button type="button" class="btn btn-primary" (click)="onClick()">
+		  Click Me!
+		</button>
+	
+	- In the buttons.component.ts, we create an EventEmitter instance that helps in emitting an event using emit function:
+	
+		import { Component, Output, EventEmitter } from '@angular/core';
+
+		@Component({
+		  selector: 'app-buttons',
+		  templateUrl: './buttons.component.html',
+		  styleUrls: ['./buttons.component.css']
+		})
+		export class ButtonsComponent {
+
+		  @Output() textChanged = new EventEmitter();
+
+		  onClick()
+		  {
+			this.textChanged.emit();
+		  }
+
+		}
+		
+	- Create a paragraphs component using below:
+	
+		ng generate component components/paragraphs
+		
+	- In paragraphs.component.ts, create an input Text that has some initial value and a method that updates this text's value:
+	
+		import { Component, Input } from '@angular/core';
+
+		@Component({
+		  selector: 'app-paragraphs',
+		  templateUrl: './paragraphs.component.html',
+		  styleUrls: ['./paragraphs.component.css'],
+		})
+		export class ParagraphsComponent {
+		  @Input() text: string = 'Initial Text';
+
+		  updateText()
+		  {
+			this.text = "This is the updated text";
+		  }
+		}
+		
+	- In paragraphs.component.html, simple put a paragraph that can update text value dynamically:
+	
+		<p> {{ text }}</p>
+
+	- Finally in the parent component of both the components which is app.component.html make the button trigger the update text method of the paragraph:
+	
+		<div class="container text-center my-3">
+			<app-paragraphs #paragraph/>
+			<app-buttons (textChanged) = "paragraph.updateText()"/>
+		</div>
+
+3. Angular components are rendered on the go so we do not need any useState for maintaining the states.
+
+	- Update the paragraphs.component.html to hold the following code:
+	
+		<p> {{ i }}</p>
+
+	- Update the paragraphs.component.ts to hold the following code: (note a new increment metho):
+	
+		import { Component, Input } from '@angular/core';
+
+		@Component({
+		  selector: 'app-paragraphs',
+		  templateUrl: './paragraphs.component.html',
+		  styleUrls: ['./paragraphs.component.css'],
+		})
+		export class ParagraphsComponent {
+		  @Input() text: string = 'Initial Text';
+		  @Input() i: number = 0;
+
+		  updateText()
+		  {
+			this.text = "This is the updated text";
+
+		  }
+
+		  increment()
+		  {
+			this.i = this.i + 1;
+			console.log(this.i);
+		  }
+		}
+
+	- Update app.component.html to call the increment method as below:
+	
+		<div class="container text-center my-3">
+			<app-paragraphs #paragraph/>
+			<app-buttons (textChanged) = "paragraph.increment()"/>
+		</div>
+		
+	This would increment the value of i everytime a button is clicked.
+
+4. Button events can trigger populating lists.
+
+	- Create a button component and put the following code in buttons.component.html:
+	
+		<button type="button" class="btn btn-primary my-3" (click)="onClick()">
+		  Click Me!
+		</button>
+		
+	- Input the following code in buttons.component.ts:
+	
+		import { Component, Output, EventEmitter } from '@angular/core';
+
+		@Component({
+		  selector: 'app-buttons',
+		  templateUrl: './buttons.component.html',
+		  styleUrls: ['./buttons.component.css']
+		})
+		export class ButtonsComponent {
+
+		  @Output() populateListEvent = new EventEmitter();
+
+		  onClick()
+		  {
+			this.populateListEvent.emit();
+		  }
+
+		}
+
+	- Create a lists component and add the following code to lists.component.ts:
+	
+		import { Component } from '@angular/core';
+
+		@Component({
+		  selector: 'app-lists',
+		  templateUrl: './lists.component.html',
+		  styleUrls: ['./lists.component.css']
+		})
+		export class ListsComponent {
+
+		  cities:string[] = ["item 1", "Item 2", "Item 3", "Item 4"];
+
+		  populateList()
+		  {
+			this.cities = ["Toronto", "Ottawa", "Oshawa", "Markham", "Ajax"];
+		  }
+		}
+		
+	- Input the following code in lists.component.html:
+	
+		<ul class="list-group">
+		  <li class="list-group-item" *ngFor="let city of cities">{{ city }}</li>
+		</ul>
+		
+	- Finally update the app.component.html to hold the following code:
+		
+		<div class="container text-center my-3 ">
+			<app-lists #list/>
+			<app-buttons (populateListEvent)="list.populateList()"/>
+		</div>
+
+5. Array can be moved to the parent component, in this case AppComponent and then passed to the lists component.
+
+	- Update the app.component.ts as below:
+	
+		import { Component, Input } from '@angular/core';
+
+		@Component({
+		  selector: 'app-root',
+		  templateUrl: './app.component.html',
+		  styleUrls: ['./app.component.css'],
+		})
+		export class AppComponent {
+		  cities:string[] = ["item 1", "Item 2", "Item 3", "Item 4"];
+
+		  populateList()
+		  {
+			this.cities = ["Toronto", "Ottawa", "Oshawa", "Markham", "Ajax"];
+		  }
+		}
+		
+	- Update the app.component.html to pass the array to list component and make the button component call the populateList() method of the AppComponent:
+		
+		<div class="container text-center my-3 ">
+			<app-lists [items]="cities"/>
+			<app-buttons (click)="populateList()"/>
+		</div>
+		
+	- Below is the code for buttons.component.ts:
+
+		import { Component, Output, EventEmitter } from '@angular/core';
+
+		@Component({
+		  selector: 'app-buttons',
+		  templateUrl: './buttons.component.html',
+		  styleUrls: ['./buttons.component.css']
+		})
+		export class ButtonsComponent {
+
+		  @Output() populateListEvent = new EventEmitter();
+
+		  onClick()
+		  {
+			this.populateListEvent.emit();
+		  }
+
+		}
+		
+	- Below is the code for buttons.component.html: (note there is no click event anymore)
+	
+		<button type="button" class="btn btn-primary my-3">
+		  Click Me!
+		</button>
+		
+	- Below is the code for lists.component.ts: (only contains an empty string array as Input())
+	
+		import { Component, Input} from '@angular/core';
+
+		@Component({
+		  selector: 'app-lists',
+		  templateUrl: './lists.component.html',
+		  styleUrls: ['./lists.component.css']
+		})
+		export class ListsComponent {
+
+		  @Input() items: string[] = [];
+
+		}
+		
+	- Below is the code for lists.component.html:
+	
+		<ul class="list-group">
+		  <li class="list-group-item" *ngFor="let item of items">{{ item }}</li>
+		</ul>
+
+6. We can also have multiple similar components to perform different operations. For example, multiple buttons to perform different operations:
+
+	- Write the following code in button template:
+	
+		<button type="button" class="btn btn-primary my-3 mx-2" (click)="onClick()">
+		  {{ text }}
+		</button>
+
+	- Button component should have the following code:
+	
+		import { Component, Output, EventEmitter, Input } from '@angular/core';
+
+		@Component({
+		  selector: 'app-button',
+		  templateUrl: './button.component.html',
+		  styleUrls: ['./button.component.css'],
+		})
+		export class ButtonComponent {
+		  @Input() text: string = '';
+		  @Output() styleListEvent = new EventEmitter();
+
+		  onClick()
+		  {
+			this.styleListEvent.emit();
+		  }
+
+		}
+
+	- List component template should now have a ngStyle as below for the color:
+	
+		<ul class="list-group">
+		  <li
+			class="list-group-item"
+			*ngFor="let city of cities"
+			[ngStyle]="{color : textColor}"
+		  >
+			{{ city }}
+		  </li>
+		</ul>
+		
+	- List component should have an input of textColor:
+	
+		import { Component, Input} from '@angular/core';
+
+		@Component({
+		  selector: 'app-list',
+		  templateUrl: './list.component.html',
+		  styleUrls: ['./list.component.css']
+		})
+		export class ListComponent {
+		  @Input() cities: string[] = [];
+		  @Input() textColor: string = '';
+
+		  setStyle()
+		  {
+			this.textColor = 'red';
+		  }
+		}
+
+
+	- Update the app component template to have the following code:
+	
+		<div class="container text-center my-3">
+		  <app-list [cities]="cities" #list></app-list>
+		  <app-button (click)="populateList()" text="Populate List"></app-button>
+		  <app-button text="Style List" (styleListEvent)="list.setStyle()"></app-button>
+
+		</div>
+
+	- app component does not change much comparing to the last exercise
+	
+		import { Component } from '@angular/core';
+
+		@Component({
+		  selector: 'app-root',
+		  templateUrl: './app.component.html',
+		  styleUrls: ['./app.component.css']
+		})
+		export class AppComponent {
+		  title = 'myapp';
+		  cities: string[] = ["item 1", "item 2", "item 3"];
+
+		  populateList()
+		  {
+			this.cities = ["Toronto", "Ottawa", "Markham", "Whitby", "Ajax"];
+		  }
+		}
+		
+	We now have two buttons using the same button component having different operations; one to populate the list and the other to style the list.
+
+		
+7. Routing is pretty efficient in Angular. RouterModule handles routing in Angular.
+
+	- import RouterModule in app.module.ts:
+	
+		import { RouterModule } from '@angular/router';
+		
+	- Add routes in imports array of app.module.ts:
+	
+		imports: [
+			BrowserModule,
+			RouterModule.forRoot([
+			  {
+				component: ListsComponent,
+				path: 'lists'
+			  },
+			  {
+				component: CardsComponent,
+				path: 'cards'
+			  },
+			  {
+				component: HeaderComponent,
+				path: 'header'
+			  },
+			  {
+				component: LabelsComponent,
+				path: 'labels'
+			  },
+
+			])
+		  ],
+	
+	- Finally, add router-outlet to app.component.html:
+	
+		<div class="container text-center my-3 ">
+			<app-lists [items]="cities"/>
+			<app-buttons (click)="populateList()"/>
+		</div>
+
+		<router-outlet></router-outlet>
+		
+	- In order to test, pass in browser url the followings for each page:
+	
+		http://localhost:4200/header
+		
+		http://localhost:4200/cards
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
