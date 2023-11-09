@@ -3,14 +3,15 @@
         <div class="card-title d-flex justify-content-start tweet-name">
             <img src="../../../assets/images/1.jpg" alt="profileImage" width="80px">
             <h5>Steve Jobs</h5>
+            <span>{{date}}</span>
         </div>
         <p class="card-text">{{data}}</p>
         <div class="d-flex justify-content-start tweet-content">
-            <a href="#" (click)="increment($event)">
+            <a href="#" class="like" (click)="increment($event)">
                 <img src="{{likeImg}}" alt="like" width="30px">
             </a>
             <p>{{counter}}</p>
-            <a href="#" (click)="decrement($event)">
+            <a href="#" class="dislike" (click)="decrement($event)">
                 <img src="{{dislikeImg}}" alt="dislike" width="30px">
             </a>
         </div>

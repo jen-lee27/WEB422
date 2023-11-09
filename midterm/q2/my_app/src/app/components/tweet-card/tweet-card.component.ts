@@ -7,6 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class TweetCardComponent {
   @Input() data: string = "";
+  @Input() date: string = "";
   @Input() counter: number = 0;
   @Input() likeImg: string = "../../../assets/images/like.png";
   @Input() dislikeImg: string = "../../../assets/images/dislike.png";

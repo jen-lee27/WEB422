@@ -13,12 +13,21 @@
 }
 .icons a {
     display: inline-block;
-    padding-left: 30px;
+    padding-left: 100px;
     padding-top: 30px;
 }
 .profile {
-    margin: 0 40vw;
+    margin-left: 50%;
 }
 .tweet-name h5 {
-    padding-top: 20px;
+    padding-top: 30px;
+}
+.tweet-name span {
+    margin-left: auto;
+}
+.like {
+    padding-bottom: 10px;
+}
+.dislike {
+    padding-top: 10px;
 }
