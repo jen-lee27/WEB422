@@ -1,0 +1,24 @@
+/* You can add global styles to this file, and also import other style files */
+.header {
+    display: inline;
+}
+.card {
+    margin: 10px;
+}
+.tweet-content p {
+    margin: 0 10px;
+}
+.icons {
+    margin-left: auto;
+}
+.icons a {
+    display: inline-block;
+    padding-left: 30px;
+    padding-top: 30px;
+}
+.profile {
+    margin: 0 40vw;
+}
+.tweet-name h5 {
+    padding-top: 20px;
+}
