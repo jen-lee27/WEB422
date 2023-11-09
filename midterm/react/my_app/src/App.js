@@ -7,7 +7,7 @@ import Content from "./states";
 function App() {
   return (
     <>
-      <h1 class="text-center">Search Names</h1>
+      <h1 className="text-center">Search Names</h1>
       <Content/>
     </>
   );

@@ -22,7 +22,7 @@ export default function Content() {
             <div className="input-group mb-3">
                 <input type="text" className="form-control" placeholder="Search by name..." aria-label="search" aria-describedby="basic-addon1" onChange={onChange} value={value}/>
             </div>
-            <ul class="list-group">
+            <ul className="list-group">
                 {arr.map((name, index) => (
                     <li className="list-group-item text-center" key={index}>{name}</li>
                 ))}
