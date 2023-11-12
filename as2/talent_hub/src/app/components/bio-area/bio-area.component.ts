@@ -12,7 +12,7 @@ export class BioAreaComponent {
   @Input() dispValue: string = "none";
 
   updateBio(bio:any, name:any, job:any) {
-    if(this.name === name) {
+    if(this.name === name && this.dispValue === "block") {
       this.dispValue = "none";
     }
     else {

@@ -1,16 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
-html, body {
-    height: 100%;
-}
 .document {
     background-color: #fdf7f1;
 }
 nav.navbar {
     border-bottom: 2px solid #eae9e5;
     padding: 0;
-}
-.nav-link {
-    color: #000;
 }
 
 .welcome.card, .welcome .card {
@@ -49,11 +43,11 @@ nav.navbar {
     background-color: #f6f6be;
 }
 .card.bg-blue {
-    background-color: #c1ccf3;
+    background-color: #d4e5fc;
 }
 
 .footer {
-    background-color: #333;
+    background-color: #222;
     color: #fff;
     padding: 1em;
 }
