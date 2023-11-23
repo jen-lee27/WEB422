@@ -1,0 +1,32 @@
+<!-- <div class="container my-3 text-center"> -->
+  <!-- <app-list/> -->
+  <!-- <app-button title="Add New Item"/> -->
+  <!-- <app-button title="Remove Item"/> -->
+
+  <!-- ex2 -->
+  <!-- <app-button title="Http"/> -->
+<!-- </div> -->
+
+<!-- ex3 -->
+<div class="container-fluid">
+  <div class="main-row row">
+    <div class="side-bar col-2 d-flex flex-column align-items-center">
+      <div class="my-3">
+        <img src="assets/images/1book2.jpg" width="150" alt="alice">
+      </div>
+      <div class="my-4">
+        <!-- <a href="./users" class="h4 text-center">Users</a> -->
+        <!-- above works, but below is what is used with angular -->
+        <a [routerLink]="'users'" class="h4 text-center">Users</a>
+      </div>
+      <div class="my-4">
+        <!-- <a href="./emails" class="h4 text-center">Emails</a> -->
+        <a [routerLink]="'emails'" class="h4 text-center">Emails</a>
+      </div>
+    </div>
+    <div class="content-area col-10">
+      <!-- <app-users/> -->
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

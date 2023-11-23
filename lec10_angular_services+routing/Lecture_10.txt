@@ -1,0 +1,454 @@
+1. We learned in our previous lecture about working with data and UI components. For example, we did something like this:
+
+	- Create a list component and add the following code:
+		- list template:
+		
+			<ul class="list-group">
+			  <li
+				class="list-group-item list-group-item-success"
+				*ngFor="let city of cities"
+			  >
+				{{ city }}
+			  </li>
+			</ul>
+			
+		- list component:
+		
+			import { Component, Input } from '@angular/core';
+
+			@Component({
+			  selector: 'app-list',
+			  templateUrl: './list.component.html',
+			  styleUrls: ['./list.component.css']
+			})
+			export class ListComponent {
+
+			  @Input() cities: string[] = [];
+
+			}
+
+	- Add the following code into app component and template:
+	
+		- App component template
+			
+			<div class="container text-center my-3">
+			  <app-list [cities] = "cities"/>
+			</div>
+
+		- App component:
+		
+			import { Component } from '@angular/core';
+
+			@Component({
+			  selector: 'app-root',
+			  templateUrl: './app.component.html',
+			  styleUrls: ['./app.component.css']
+			})
+			export class AppComponent {
+			  title = 'myapp';
+			  cities: string[] = ["Toronto", "Ottawa", "Whitby", "Ajax", "Markham"];
+
+			}
+
+	This code will help in populating the list.
+	
+2. This approach is not very flexible as the data is being passed from root component downwards and also UI components should only deal with UI and nothing else if possible. We can take advantage of Angular Service.
+
+	- Create an angular service using the following command:
+	
+		ng generate service services/data
+		
+	- Once service is created, put the following code in ts file of this service:
+	
+		import { Injectable } from '@angular/core';
+
+		@Injectable({
+		  providedIn: 'root'
+		})
+		export class DataService {
+		  
+		  cities: string[] = ["Toronto", "Ottawa", "Whitby", "Ajax", "Markham"];
+
+		  constructor() { }
+
+		  getCities(): string[]
+		  {
+			return this.cities;
+		  }
+		}
+		
+	- Update the app component by remove the cities array from there and update the app component html as below:
+	
+		<div class="container text-center my-3">
+		  <app-list/>
+		</div>
+		
+	- Update the list component as below:
+	
+		import { Component, Input } from '@angular/core';
+		import { DataService } from 'src/app/services/data.service';
+
+		@Component({
+		  selector: 'app-list',
+		  templateUrl: './list.component.html',
+		  styleUrls: ['./list.component.css']
+		})
+		export class ListComponent {
+
+		  cities: string[] = [];
+
+		  constructor()
+		  {
+			let dataService = new DataService();
+			this.cities = dataService.getCities()
+		  }
+		}
+
+	This would help list component get the data from the service instead of app component.
+
+3. Dependency Injection is a concept that helps code reusability and reduces dependency of components on a service. For example in the below code ListComponent is dependent on the DataService:
+
+		constructor()
+		{
+			let dataService = new DataService();
+			this.cities = dataService.getCities()
+		}
+		
+	- If we change the constructor of the DataService from default to parameterized constructor, our program will break because ListComponent is looking for a default constructor.
+	- In order to avoid this dependency, we ask Angular to handle this and let it create an Object of this service at the root level and let other components use it.
+	
+	- We can update the code to allow Dependency Injection as below:
+	
+		constructor(private dataService: DataService)
+		{
+			this.cities = dataService.getCities();
+		}
+		
+	- The code below tells Angular to inject this service at the root level:
+	
+		@Injectable({
+			providedIn: 'root'
+		})
+		
+4. Lets try Dependency Injection.
+
+	- Create a list component with the following code:
+	
+		- Add code below in template of the list:
+		
+			<ul class="list-group">
+			  <li
+				class="list-group-item list-group-item-success"
+				*ngFor="let city of cities"
+			  >
+				{{ city }}
+			  </li>
+			</ul>
+
+		- Add below code in the component file of the list:
+		
+			import { Component, Input } from '@angular/core';
+			import { DataService } from 'src/app/services/data.service';
+
+			@Component({
+			  selector: 'app-list',
+			  templateUrl: './list.component.html',
+			  styleUrls: ['./list.component.css']
+			})
+			export class ListComponent {
+
+			  cities: string[] = [];
+
+			  constructor(private dataService: DataService)
+			  {
+				console.log("List constructor");
+				this.cities = dataService.getCities();
+			  }
+			}
+			
+	- Create data service to hold the following code:
+	
+		import { Injectable } from '@angular/core';
+
+		@Injectable({
+		  providedIn: 'root'
+		})
+		export class DataService {
+		  cities: string[] = ["Toronto", "Whitby", "Ajax", "Oshawa", "Markham"];
+		  
+		  constructor() { }
+
+		  getCities(): string[]
+		  {
+			return this.cities;
+		  }
+
+		  addItem(item: string)
+		  {
+			this.cities.push(item);
+		  }
+
+		  removeItem()
+		  {
+			this.cities.splice(this.cities.length-1, 1);
+		  }
+
+		}
+
+
+	- Create a new Component Button with the following code:
+	
+		- Add below code in template file
+	
+			<button type="button" class="btn btn-primary my-3 mx-3" (click)="onClick()">
+			  {{title}}
+			</button>
+		
+		- Add following code in Button component:
+		
+			import { Component, Input } from '@angular/core';
+			import { DataService } from 'src/app/services/data.service';
+
+			@Component({
+			  selector: 'app-button',
+			  templateUrl: './button.component.html',
+			  styleUrls: ['./button.component.css']
+			})
+			export class ButtonComponent {
+
+			  @Input() title: string = '';
+			  i: number = 1;
+
+			  constructor(private dataService: DataService) {
+				console.log("Button constructor");
+			  }
+
+			  onClick()
+			  {
+				if (this.title.match('Add New Item'))
+				{
+				  console.log("Add Clicked");
+				  this.dataService.addItem("New Item " + this.i);
+				  this.i++;
+				} 
+				else if (this.title.match('Remove Item'))
+				{
+				  console.log("Remove Clicked");
+				  this.dataService.removeItem();
+				}
+			  }
+			}
+
+	- Finally, add the components to the app component:
+	
+		<div class="container text-center my-3">
+		  <app-list/>
+		  <app-button title="Add New Item"/>
+		  <app-button title="Remove Item"/>
+		</div>
+		
+
+5. Lets now work with Http Services.
+
+	- Create a new service called http and add the following code to it:
+	
+		import { Injectable } from '@angular/core';
+		import {HttpClient} from '@angular/common/http'
+		import { Observable } from 'rxjs';
+		import { User } from '../interfaces/user';
+
+		@Injectable({
+		  providedIn: 'root'
+		})
+		export class HttpService {
+
+		  constructor(private http: HttpClient) { }
+
+		  getPost(): Observable<User>
+		  {
+			return this.http.get<User>('https://jsonplaceholder.typicode.com/posts/1');
+		  }
+		}
+		
+	- Since the service uses a container User to hold the data fetched from the API, lets create an interface User as below:
+	
+		export interface User {
+			userId: string;
+			id: string;
+			title: string;
+			body: string;
+		}
+		
+	- In button component add the following function which is called on the click of the button:
+	
+		  onClickHttp()
+		  {
+			 this.httpService.getPost().subscribe(data=> console.log(data.title));
+		  }
+
+	- Make sure to import the following in app.module.ts:
+	
+		import {HttpClientModule} from '@angular/common/http'
+	
+	- Also add the following to imports in app.module.ts:
+	
+		  imports: [
+			BrowserModule,
+			HttpClientModule,
+		  ],
+	
+	This would fetch the data from the API on the button click and show it on the console.
+	
+6. Lets now create an app that has routing built into it.
+
+	- Create an angular app that has routing in it.
+	
+	- In app-routing.module.ts add the following code:
+	
+		import { NgModule } from '@angular/core';
+		import { RouterModule, Routes } from '@angular/router';
+		import { HomeComponent } from './components/home/home.component';
+		import { CommentsComponent } from './components/comments/comments.component';
+		import { UsersComponent } from './components/users/users.component';
+		CommentsComponent
+
+		const routes: Routes = [
+		  {
+			path: '', component: UsersComponent
+		  },
+		  {
+			path: 'users', component: UsersComponent
+		  },
+		  {
+			path: 'comments', component: CommentsComponent
+
+		  }
+		];
+
+		@NgModule({
+		  imports: [RouterModule.forRoot(routes)],
+		  exports: [RouterModule]
+		})
+		export class AppRoutingModule { }
+
+
+	- Add following code to app template
+	
+		
+		<div class="main-container container-fluid">
+			<div class="main-row row">
+			  <div class="side-bar col-2 d-flex flex-column align-items-center">
+				<div class="my-3">
+				  <img src="assets/images/Seneca_logo.png" width="150" />
+				</div>
+				<div class="my-4">
+				  <a [routerLink]="'users'" class="h4 text-center">Users</a>
+				</div>
+				<div class="my-4">
+				  <a [routerLink]="'comments'" class="h4 text-center">Comments</a>
+				</div>
+			  </div>
+			  <div class="content-area col-10 align-items-center border">
+				<router-outlet></router-outlet>
+			  </div>
+			</div>
+		  </div>
+
+	- Add following style in css for app
+	
+		.side-bar{
+			background-color: rgb(247, 247, 247);
+			height: 100vh;
+		}
+		
+	- Create a service and add the following code to it. Lets call this user
+		
+		import { Injectable } from '@angular/core';
+		import { HttpClient } from '@angular/common/http';
+		import { Observable } from 'rxjs';
+		import { User } from '../interfaces/user';
+
+		@Injectable({
+		  providedIn: 'root'
+		})
+		export class UserService {
+
+		  constructor(private http: HttpClient) { }
+
+		  getUsers(): Observable<User[]>
+		  {
+			return this.http.get<User[]>('https://jsonplaceholder.typicode.com/comments');
+		  }
+		}
+
+	- In order to hold the data from service, lets create an interface user as below:
+	
+		export interface User {
+			postId: string;
+			id: string;
+			name: string;
+			email: string;
+			body: string;
+		}
+
+	- Lets create a list component, add the following code to :
+	
+		- add this code to template:
+		
+			<ul class="list-group">
+			  <ng-container *ngIf="id === 'users'; else commentsContent">
+				<li class="list-group-item" *ngFor="let user of users.slice(0, 20)">{{ user.name }}</li>
+			  </ng-container>
+
+			  <ng-template #commentsContent>
+				<li class="list-group-item" *ngFor="let user of users.slice(0, 20)">{{ user.email }}</li>
+			  </ng-template>
+			  
+			</ul>
+			
+		- add this code to ts:
+		
+			import { Component, Input } from '@angular/core';
+			import { User } from 'src/app/interfaces/user';
+			import { UserService } from 'src/app/services/user.service';
+
+			@Component({
+			  selector: 'app-list',
+			  templateUrl: './list.component.html',
+			  styleUrls: ['./list.component.css']
+			})
+			export class ListComponent {
+			  users: User[] = [];
+			  @Input() id:string = '';
+
+			  constructor(private userService: UserService)
+			  {
+				this.userService.getUsers().subscribe((data: User[])=> this.users = data);
+				
+			  }
+			  ngOnInit(){
+				console.log(this.id);
+			  }
+
+			}
+
+
+		
+	- Create a users component and add following code to its template
+	
+		<div class="col-12">
+		  <h2 class="text-center my-4">Users Data</h2>
+		</div>
+		<div class="col-12">
+		  <app-list id="users"/>
+		</div>
+
+	
+	- Add comments component and add the following code to its template:
+	
+		<div class="col-12">
+		  <h2 class="text-center my-4">Users Data</h2>
+		</div>
+		<div class="col-12">
+		  <app-list id="comments" />
+		</div>

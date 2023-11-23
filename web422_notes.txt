@@ -54,6 +54,9 @@ Now, create a new angular app:
 		add angular routing? n (no for now, because we're not going to work with routing today)
 		stylsheet format? css
 
+	* You can use the following command to generate a project that has app.module.ts and app-routing.module.ts:
+		ng new my-app --no-standalone --routing --ssr=false
+
 to run:
 	cd my_app
 	ng serve
@@ -121,3 +124,56 @@ Example1: When the "Click Me" Button that resides within BUTTON component is cli
 Example2: Implement a counter program that increments everytime a button is clicked
 Example3: whenever a button is clicked, populate a list
 Example4: change the style when a button is clicked
+
+
+
+
+lec10
+=====
+to keep all data-related works separate, we create a service:
+	ng generate service services/data
+
+singleton: creates only one instance of that element at the application level and everything will end up using that one instance - will not create a different one everytime it is used
+	-> Dependency Injection
+
+example 2:
+	1. create a user service with 	ng generate service services/user
+	2. we will be using https://jsonplaceholder.typicode.com/posts/1
+	3. we need some initial setups to fetch data from external api
+		3.1 you need to put the below line inside app.module.ts:
+ 			import { HttpClientModule } from '@angular/common/http';
+		and also add the below inside imports array, also in app.module.ts:
+			HttpClientModule
+	4. inside user.service.ts, include:
+		import { HttpClient } from "@angular/common/http";
+	5. now the HttpClient can be accessed:
+		constructor(private http: HttpClient) { }
+	6. 
+		getPost() {
+   			this.http.get('https://jsonplaceholder.typicode.com/posts/1');
+		}
+	7. since we cannot be certain that this data will be fetched immediately, we use an "Observable" which will ensure that the data will be delivered as soon as it is fetched
+		getPost(): Observable {
+			return this.http.get('https://jsonplaceholder.typicode.com/posts/1');
+		}
+		
+		7.1 and we need to import the Observable from rxjs:
+			import { Observable } from 'rxjs';
+	8. we need to provide a place to store that object in, and because it doesn't know what format our data will be in, we will do a similar thing like class in java/c++:
+		ng generate interface interfaces/user
+	9. specify the empty abstract interface (ie. class) we've just created with it's components (ie. from the json we're fetching):
+		export interface User {
+    			userId: string;
+    			id: string;
+    			title: string;
+    			body: string;
+		}
+	10. user the user interface created above and provide the template whenever we use the get method. Go back to user.service.ts and update:
+		getPost(): Observable<User> {
+   			return this.http.get<User>('https://jsonplaceholder.typicode.com/posts/1');
+		}
+	the second "<User>" is basically telling it to bring the data in the form of a "User", and the first "<User>" is telling it to return it in the form of a "User"
+
+		10.1 and import:
+			import { User } from '../interfaces/user';
+
