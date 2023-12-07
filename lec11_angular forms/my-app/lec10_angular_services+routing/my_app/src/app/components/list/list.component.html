@@ -1,0 +1,15 @@
+<!-- <ul class="list-group">
+    <li class="list-group-item" *ngFor="let city of cities">{{city}}</li>
+  </ul> -->
+
+
+<!-- ex3 -->
+<ul class="list-group">
+    <ng-container *ngIf="id_ex3 === 'users'; else commentsContent">
+        <li class="list-group-item" *ngFor="let user of userss">{{user.name}}</li>
+    </ng-container>
+
+    <ng-template #commentsContent>
+        <li class="list-group-item" *ngFor="let user of userss">{{user.email}}</li>
+    </ng-template>
+</ul>

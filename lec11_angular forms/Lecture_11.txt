@@ -1,0 +1,478 @@
+1. We'll be working on Angular forms today.
+
+	- To start with form, import the following in app.module.ts:
+		
+		import { FormsModule } from '@angular/forms';
+	
+	- Make sure to add this to imports in app.module.ts
+	
+		  imports: [
+			BrowserModule,
+			AppRoutingModule,
+			FormsModule
+		  ],
+		  
+	- Add the following code to app.component.html
+	
+		<form class="form" (ngSubmit)="onSubmit()">
+		  <div class="container my-4 col-4">
+			<div class="mb-3">
+			  <label for="formGroupExampleInput" class="form-label">Name</label>
+			  <input
+				type="text"
+				class="form-control"
+				id="formGroupExampleInput"
+				placeholder="Example input placeholder"
+			  />
+			</div>
+			<div class="mb-3">
+			  <label for="formGroupExampleInput2" class="form-label">Age</label>
+			  <input
+				type="text"
+				class="form-control"
+				id="formGroupExampleInput2"
+				placeholder="Another input placeholder"
+			  />
+			</div>
+			<div class="d-grid gap-2 col-6 mx-auto">
+			  <button class="btn btn-primary" type="submit">Submit Information</button>
+			</div>
+		  </div>
+		</form>
+		
+	- Add the following code to app.component.ts
+	
+		import { Component } from '@angular/core';
+
+		@Component({
+		  selector: 'app-root',
+		  templateUrl: './app.component.html',
+		  styleUrls: ['./app.component.css']
+		})
+		export class AppComponent {
+		  title = 'myapp';
+
+		  onSubmit()
+		  {
+			console.log("Form Submitted");
+		  }
+		}
+		
+	The above code will show a console message everytime form is submitted.
+	
+2. We can also pass the form reference to the submit method by using a template for the form as below:
+
+	- Below code goes to html file of app
+	
+		<form #myForm class="form" (ngSubmit)="onSubmit(myForm)">
+		
+	- Below code goes to ts file of App 
+	
+		onSubmit(myForm: HTMLFormElement)
+		{
+			console.log(myForm);
+		}
+	
+	
+3. In the above code, myForm was of type HTMLFormElement which is more of a generic form element. In order to use NgForm we have to make sure we tell compiler that this component is NgForm component which provided us flexibility of using several other features of angular on forms
+
+	- Below code goes to html file of app
+
+		<form #myForm="ngForm" class="form" (ngSubmit)="onSubmit(myForm)">
+		
+	- Below code goes to ts file of App 
+	
+		onSubmit(myForm: NgForm)
+		{
+			console.log(myForm);
+		}
+		
+4. We NgForm we get a lot of properties for this form, however, each control is not available in NgForm object. That is because, we never asked compiler to keep track of each control. We can do that by adding ngMode to each control
+	
+	- Below code goes to html file of app (make sure to add name property to each ngModel component)
+	
+		<form #myForm="ngForm" class="form" (ngSubmit)="onSubmit(myForm)">
+		  <div class="container my-4 col-4">
+			<div class="mb-3">
+			  <label for="formGroupExampleInput" class="form-label">Name</label>
+			  <input
+				type="text"
+				name="name"
+				class="form-control"
+				id="formGroupExampleInput"
+				placeholder="Example input placeholder" ngModel
+			  />
+			</div>
+			<div class="mb-3">
+			  <label for="formGroupExampleInput2" class="form-label">Age</label>
+			  <input
+				type="text"
+				class="form-control"
+				id="formGroupExampleInput2"
+				name="age"
+				placeholder="Another input placeholder" ngModel
+			  />
+			</div>
+			<div class="d-grid gap-2 col-6 mx-auto">
+			  <button class="btn btn-primary" type="submit" ngModel>Submit Information</button>
+			</div>
+		  </div>
+		</form>
+		
+	- Code for ts file does not change.
+	
+	- If you now go to console, you'll see the details of each control under controls and value for each control under values.
+	
+	- We can now go to ts file to write the following code to get the value of age entered in the age input
+	
+		onSubmit(myForm: NgForm)
+		{
+			console.log(myForm.value.age);
+		}
+
+5. Lets now work with some other controls as well like Radio Buttons and check boxes
+
+	- Add the following code to app template (this will add 3 radio buttons)
+	
+		<form #myForm="ngForm" class="form" (ngSubmit)="onSubmit(myForm)">
+		  <div class="container my-4 col-4">
+			<div class="mb-3">
+			  <label for="formGroupExampleInput" class="form-label">Name</label>
+			  <input
+				type="text"
+				name="name"
+				class="form-control"
+				id="formGroupExampleInput"
+				placeholder="Example input placeholder"
+				ngModel
+			  />
+			</div>
+			<div class="mb-3">
+			  <label for="formGroupExampleInput2" class="form-label">Age</label>
+			  <input
+				type="text"
+				class="form-control"
+				id="formGroupExampleInput2"
+				name="age"
+				placeholder="Another input placeholder"
+				ngModel
+			  />
+			</div>
+			<div>
+			  <div class="form-check">
+				<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+				<label class="form-check-label" for="flexRadioDefault1">
+				  Male
+				</label>
+			  </div>
+			  <div class="form-check">
+				<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+				<label class="form-check-label" for="flexRadioDefault2">
+				  Female
+				</label>
+			  </div>
+			  <div class="form-check">
+				<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+				<label class="form-check-label" for="flexRadioDefault2">
+				  Others
+				</label>
+			  </div>
+			</div>
+			<div class="d-grid gap-2 col-6 mx-auto">
+			  <button class="btn btn-primary my-4" type="submit">Submit Information</button>
+			</div>
+		  </div>
+		</form>
+		
+	- As you might see we have to write same code for all 3 radio buttons, we can use *ngFor to solve this problem:
+	
+		- Below code goes in app template
+		
+			<form #myForm="ngForm" class="form" (ngSubmit)="onSubmit(myForm)">
+			  <div class="container my-4 col-4">
+				<div class="mb-3">
+				  <label for="formGroupExampleInput" class="form-label">Name</label>
+				  <input
+					type="text"
+					name="name"
+					class="form-control"
+					id="formGroupExampleInput"
+					placeholder="Example input placeholder"
+					ngModel
+				  />
+				</div>
+				<div class="mb-3">
+				  <label for="formGroupExampleInput2" class="form-label">Age</label>
+				  <input
+					type="text"
+					class="form-control"
+					id="formGroupExampleInput2"
+					name="age"
+					placeholder="Another input placeholder"
+					ngModel
+				  />
+				</div>
+				<div>
+				  <div class="form-check" *ngFor="let gender of genders">
+					<input
+					  class="form-check-input"
+					  type="radio"
+					  [name]="gender.name"
+					  [id]="gender.id"
+					  [value]="gender.value"
+					  ngModel
+					/>
+					<label class="form-check-label" [for]="gender.id">
+					  {{ gender.value }}
+					</label>
+				  </div>
+				</div>
+				<div class="d-grid gap-2 col-6 mx-auto">
+				  <button class="btn btn-primary my-4" type="submit">
+					Submit Information
+				  </button>
+				</div>
+			  </div>
+			</form>
+			
+		- Below code goes in app ts file
+		
+			import { Component } from '@angular/core';
+			import { NgForm } from '@angular/forms';
+
+			@Component({
+			  selector: 'app-root',
+			  templateUrl: './app.component.html',
+			  styleUrls: ['./app.component.css'],
+			})
+			export class AppComponent {
+			  title = 'myapp';
+
+			  genders = [
+				{ id: 'id-male', name: 'radio-group', value: 'Male' },
+				{ id: 'id-female', name: 'radio-group', value: 'Female' },
+				{ id: 'id-other', name: 'radio-group', value: 'Others' },
+			  ];
+
+			  onSubmit(myForm: NgForm) {
+				console.log(myForm);
+			  }
+			}
+			
+		The above app when runs with selection of radio button should show on console the appropriate values on the submission of the form.
+		
+		
+6. Lets now add a checkbox as well
+
+	- Add following code to template
+	
+		<form #myForm="ngForm" class="form" (ngSubmit)="onSubmit(myForm)">
+		  <div class="container my-4 col-4">
+			<div class="mb-3">
+			  <label for="formGroupExampleInput" class="form-label">Name</label>
+			  <input
+				type="text"
+				name="name"
+				class="form-control"
+				id="formGroupExampleInput"
+				placeholder="Example input placeholder"
+				ngModel
+			  />
+			</div>
+			<div class="mb-3">
+			  <label for="formGroupExampleInput2" class="form-label">Age</label>
+			  <input
+				type="text"
+				class="form-control"
+				id="formGroupExampleInput2"
+				name="age"
+				placeholder="Another input placeholder"
+				ngModel
+			  />
+			</div>
+			<div>
+			  <div class="form-check" *ngFor="let gender of genders">
+				<input
+				  class="form-check-input"
+				  type="radio"
+				  [name]="gender.name"
+				  [id]="gender.id"
+				  [value]="gender.value"
+				  ngModel
+				/>
+				<label class="form-check-label" [for]="gender.id">
+				  {{ gender.value }}
+				</label>
+			  </div>
+			</div>
+
+			<div class="my-4">
+			  <div class="form-check">
+				<input
+				  class="form-check-input"
+				  type="checkbox"
+				  value="Remember Me"
+				  name="Remember me"
+				  id="flexCheckDefault"
+				  ngModel
+				/>
+				<label class="form-check-label" for="flexCheckDefault">
+				  Remember Me
+				</label>
+			  </div>
+			</div>
+			<div class="d-grid gap-2 col-6 mx-auto">
+			  <button class="btn btn-primary my-2" type="submit">
+				Submit Information
+			  </button>
+			</div>
+		  </div>
+		</form>
+
+	This will now add the checkbox to ngModel objects
+	
+7. Forms validations in angular are like any other form validations. It uses required html component to check for validation.
+
+	- For example, adding required to the name input will make it mandatory to enter
+	
+		<div class="mb-3">
+		  <label for="formGroupExampleInput" class="form-label">Name</label>
+		  <input
+			type="text"
+			name="name"
+			class="form-control"
+			id="formGroupExampleInput"
+			placeholder="Example input placeholder"
+			ngModel required
+		  />
+		</div>
+		
+	On click of submit checking the form would give us invalid: true for the whole form and also for the controls>name>invalid
+	
+8. We can use other HTML validators as well. For example, we want name field to have only characters we can use pattern:
+
+	- Add following to name input
+	
+		<div class="mb-3">
+		  <label for="formGroupExampleInput" class="form-label">Name</label>
+		  <input
+			type="text"
+			name="name"
+			class="form-control"
+			id="formGroupExampleInput"
+			placeholder="Example input placeholder"
+			ngModel required pattern="[a-zA-Z]*"
+		  />
+		</div>
+
+	- Similarly, we can use minlength="3" and maxlength="10"
+	
+	- In order to have validation for numbers in age, we can have min and type as number
+	
+		<div class="mb-3">
+		  <label for="formGroupExampleInput2" class="form-label">Age</label>
+		  <input
+			type="number"
+			class="form-control"
+			id="formGroupExampleInput2"
+			name="age"
+			placeholder="Another input placeholder"
+			ngModel
+			min="1"
+		  />
+		</div>
+		
+9. We can disable the submit button till all the validations are done
+
+	- Add the following [disabled] to the button
+		
+		<button class="btn btn-primary my-2" type="submit" [disabled]="!myForm.form.valid">
+
+	In above code we are checking the valid property of the form to enable or disable the button.
+	
+10. We can also make use of some ng classes like ng-invalid, ng-touched etc which are created by default by angular.
+
+	- For example, if we want to show a red border on the input if the user has touched the input but did not provide a valid input, we can simply go and style ng-invalid and ng-touched classes in CSS
+	
+		- We can write the following code in app component css
+		
+			input.ng-invalid.ng-touched{
+				border: red 2px solid;
+			}
+			
+	- We can also show a small text under the name input to show that Name is a required field by writing the following code in name div
+	
+		<div class="mb-3">
+		  <label for="formGroupExampleInput" class="form-label">Name</label>
+		  <input
+			type="text"
+			name="name"
+			class="form-control"
+			id="formGroupExampleInput"
+			placeholder="Example input placeholder"
+			ngModel
+			required
+			pattern="[a-zA-Z]*"
+			minlength="3"
+			#nameRef="ngModel"
+		  />
+		  <small *ngIf="nameRef.invalid && nameRef.touched">Name is a required field</small>
+		</div>
+		
+		we can style small as below by adding to css
+		
+			small{
+				color: red;
+			}
+			
+
+11. We can also get the data entered from html to ts file.
+
+	- For example, whenever button is clicked, whatever data is in the name input, it should be shown on the console.
+	
+		<div class="mb-3">
+		  <label for="formGroupExampleInput" class="form-label">Name</label>
+		  <input
+			type="text"
+			name="name"
+			class="form-control"
+			id="formGroupExampleInput"
+			placeholder="Example input placeholder"
+			[(ngModel)]="name"
+			required
+			pattern="[a-zA-Z]*"
+			minlength="3"
+			#nameRef="ngModel"
+			(input)="logInput()"
+		  />
+		  <small *ngIf="nameRef.invalid && nameRef.touched"
+			>Name is a required field</small
+		  >
+		</div>
+		
+		In above code [(ngModel)]="name" is assigned to a variable name which is created in the ts file:
+		
+		  name: string = '';
+		  age: number = 0;
+		  gender: string = '';
+		  remember: string = '';
+
+		  onSubmit(myForm: NgForm) {
+			console.log(myForm);
+			console.log(this.name);
+		  }
+		  
+12. We can also use (input) as onChange on the name input. So instead of getting the name on the click of the button we can add the following line for the input in template html
+
+	- Add following to input in app template
+	
+		(input)="logInput()"
+		
+	- Add below code to ts file
+	
+		logInput()
+		  {
+			console.log(this.name);
+		  }
+		  
+	The above assumes there is already a name data member in the ts file.

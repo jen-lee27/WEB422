@@ -1,0 +1,8 @@
+<nav class="navbar">
+    <div class="container-fluid d-flex flex-column align-items-center">
+      <form class="d-flex" role="search" (ngSubmit)="onSearch()">
+        <input class="form-control me-3" [(ngModel)]="searchVal" name="searchVal" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-success" type="submit">Search</button>
+      </form>
+    </div>
+</nav>

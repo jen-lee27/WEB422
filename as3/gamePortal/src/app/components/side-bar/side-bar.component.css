@@ -1,0 +1,14 @@
+.side-logo {
+    padding-top: 12px;
+}
+.side-link {
+    border-bottom: 1px dashed #666;
+}
+.side-link a {
+    color: #666;
+    font-size: 1em;
+    text-decoration: none;
+}
+.side-link a:hover {
+    color: #EB6D22;
+}

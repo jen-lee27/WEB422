@@ -1,0 +1,11 @@
+<app-search (searchEvent)="searchFor($event)"/>
+<div class="content">
+    <div class="card" *ngFor="let game of games">
+        <img [src]="game.thumbnail" class="card-img-top pt-3 mx-3" alt="Game Image">
+        <div class="card-body">
+            <h5 class="card-title">{{game.title}}</h5>
+            <p class="card-text">{{game.short_description}}</p>
+            <a [href]="game.game_url" target="_blank" class="btn btn-warning">Visit Game Page</a>
+        </div>
+    </div>
+</div>

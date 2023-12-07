@@ -54,7 +54,7 @@ Now, create a new angular app:
 		add angular routing? n (no for now, because we're not going to work with routing today)
 		stylsheet format? css
 
-	* You can use the following command to generate a project that has app.module.ts and app-routing.module.ts:
+	* You can use the following command to generate a project that has app.module.ts and app-routing.module.ts (old version):
 		ng new my-app --no-standalone --routing --ssr=false
 
 to run:
@@ -142,7 +142,7 @@ example 2:
 	3. we need some initial setups to fetch data from external api
 		3.1 you need to put the below line inside app.module.ts:
  			import { HttpClientModule } from '@angular/common/http';
-		and also add the below inside imports array, also in app.module.ts:
+		and also add the below inside "imports" array, also in app.module.ts:
 			HttpClientModule
 	4. inside user.service.ts, include:
 		import { HttpClient } from "@angular/common/http";
@@ -177,3 +177,61 @@ example 2:
 		10.1 and import:
 			import { User } from '../interfaces/user';
 
+
+
+
+lec11
+======
+to work with angular forms, you need to import FormsModule in apps.module.ts:
+	import { FormsModule } from '@angular/forms' 
+and also add formsmodule in the imports array below:
+	imports: [
+    		BrowserModule,
+		AppRoutingModule,
+		FormsModule
+	],
+
+Create a simple form (with 2 text inputs + 1 submit), and declare it as an "ngform":
+	<form class="form" (ngSubmit)="onSubmit(myForm)" #myForm="ngForm">
+		* the "myForm" that is passed in into the onSubmit function is coming from #myForm (which will be in the format of ngForm)
+Similarly, in app.component.ts, create an onSubmit function as follows:
+	onSubmit(myForm: NgForm) {
+    		console.log(myForm);
+  	}
+
+However, the problem now is the 2 text inputs in the form is still in an HTML format. These need to be declared as "ngModel" to specify it is an angular model:
+	<input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter age" name="age" NgModel>
+		* angular will access the NgModel components by their names, not by their IDs (thus, name is required)
+		* you can see it inside the "controls" as the name you specified, when you see the console (developer tools on web) only when you have it as NgModel
+
+To access the values that are inputted in the text inputs, you can access them as follows:
+	onSubmit(myForm: NgForm) {
+    		console.log(myForm.value.name);
+  	}
+
+
+some sample validators
+-------------
+- required			input is required
+- pattern = "[a-zA-Z]*"		can only take alphabets
+- minlength/maxlength
+- type = "number"		can only take numbers
+- min = "1"			mininum value is "1", if it's any lower, the form is "invalid"
+- disabled			will make the element disabled
+	* if you want to have it enabled on condition:
+		[disabled]="!myForm.form.valid" where myForm comes from the name I tagged my form with "#myForm"
+
+to show the invalid inputs (once it has been touched), put this in app.component.css:
+	input.ng-invalid.ng-touched {
+    		border: red 2px solid;
+	}
+
+Two-way binding
+------------
+inside app.component.ts file, create a string variable called name
+	name: string="";
+Then for the name input field, we'll make the ngModel pass the value of the textfield directly to the variable name from above
+	[(ngModel)]="name"
+
+to do an onchange event:
+	(input)="whatever_name_of_function()"

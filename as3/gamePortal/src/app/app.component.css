@@ -1,0 +1,13 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+.side-bar {
+    background-color: #111;
+    height: 100vh;
+}
+.content-area {
+    background-color: #202020;
+    height: 100vh;
+    overflow: auto;
+}

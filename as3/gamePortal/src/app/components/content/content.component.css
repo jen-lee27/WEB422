@@ -1,0 +1,30 @@
+.content {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1em;
+    padding: 2em 1em;
+}
+.content .card {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    margin: 0 auto;
+    width: 18rem;
+}
+.card-title {
+    font-size: 1.15em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.card-text {
+    font-size: .8em;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 4.85em;
+}
+.card-img-top {
+    width: 90%;
+}

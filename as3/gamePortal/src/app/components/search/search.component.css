@@ -1,0 +1,18 @@
+.navbar {
+    background-color: #000;/* rgba(0, 0, 0, 0.8);*/
+    width: 100%;
+    padding: 16px 0;
+
+    /* position: sticky;
+    left: 0;
+    top: 0;
+    z-index: 1000; */
+    /* transition: all 0.3s ease; */
+}
+/* .nav.on {
+    position: fixed;
+    top: -61px;
+} */
+input {
+    width: 30vw;
+}
