@@ -1,1 +1,18 @@
-<h1>hello world</h1>
+<div class="container">
+  <div class="input-group flex-nowrap my-2">
+    <input type="text" class="form-control" placeholder="Enter city name to search" aria-label="search" aria-describedby="addon-wrapping"
+    name = "searchVal"
+    [(ngModel)] = "searchVal"
+    (input) = "searchFor()">
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item"
+      *ngFor="let city of subArr">
+          {{city}}
+    </li>
+  </ul>
+  <div class="alert alert-light my-2" role="alert" 
+  *ngIf="subArr.length === 0">
+    No entries matching the input
+  </div>
+</div>
