@@ -1,1 +1,22 @@
-<p>list works!</p>
+<table class="table">
+    <thead class="table-light">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">State/Province</th>
+            <th scope="col">Web Pages</th>
+            <th scope="col">Domains</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let uni of list;">
+            <td scope="row">{{uni.name}}</td>
+            <td>{{uni['state-province']}}</td>
+            <td>{{uni.web_pages[0]}}</td>
+            <td>{{uni.domains[0]}}</td>
+            <td (click)="deleteRecord(uni.name)">
+                <img src="../../../assets/images/delete.png" alt="delete">
+            </td>
+        </tr>
+    </tbody>
+  </table>
