@@ -55,7 +55,7 @@ Now, create a new angular app:
 		stylsheet format? css
 
 	* You can use the following command to generate a project that has app.module.ts and app-routing.module.ts (old version):
-		ng new my-app --no-standalone --routing --ssr=false
+		ng new my_app --no-standalone --routing --ssr=false
 
 to run:
 	cd my_app
@@ -101,7 +101,7 @@ Example1: When the "Click Me" Button that resides within BUTTON component is cli
 		4.2 also update onClikk function:
 			onClickk() {
 			    console.log("button clicked!");
-			    this.textChangedd.emit(); //shout-out!!!
+			    this.textChangedd.emit(); //shout-out!!! 
 			}
 		4.3 inside the PARAGRAPH ts, add:
 			updateTextt() {

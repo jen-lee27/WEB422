@@ -1,0 +1,433 @@
+1. This week, we study about authentication using JSON Web Tokens (JWT). They are a way of authentication and authorization on server.
+
+	- First thing is to install all the pre-requisites. We'll be going an exercise on Node.js
+	
+		- Create a node package using the following command:
+		
+			npm init -y
+			
+		- Create an index.js file in the same folder which would run as the main file
+		
+		- It is a good idea to install a package called nodemon which helps in updating the server without restarting it
+		
+			npm install -g nodemon
+			
+		- Update the package.json with the following code under scripts to make sure everything server starts index.js is executed
+		
+			"scripts": {
+				"start": "nodemon index.js"
+			},
+			
+		- Install express as we'll be using it to run our server:
+		
+			npm install express
+			
+	- Update the index.js file with the following code to setup the server
+		
+			const express = require("express");
+
+			const app = express();
+
+
+			app.listen(3000, ()=>{
+				console.log("Server running on port 3000");
+			});
+			
+	- Run the following commmand in the terminal to run the server
+		
+			npm run start
+			
+	- Add the following code to index.js
+		
+			app.get("/", (req, res) =>{
+				res.send("Hello from the server");
+			});
+			
+		Go to Browser at localhost:3000 and it should show the message sent from the server
+		
+2. Let's create some more routes now for registering a user
+
+	- Update index.js with the following code:
+	
+		const express = require("express");
+		const {users} = require("./data.js")
+
+		const app = express();
+
+		app.use(express.json());
+
+		app.get("/", (req, res) =>{
+			res.send("Hello from the server");
+		});
+
+		app.post("/register", (req, res)=>{
+			const {email, password} = req.body;
+
+			const user = users.find((user) =>{
+				return user.email === email;
+			});
+
+			if (user)
+			{
+				return res.status(400).json(
+					{
+						"errors": [
+							{
+								"msg": "User already exists"
+							}
+						]
+					}
+				)
+			}
+			return res.send("User registered!");
+		});
+
+		app.listen(3000, ()=>{
+			console.log("Server running on port 3000");
+		});
+		
+	- Create a new file data.js to hold the following data:
+	
+		const users = [
+			{
+				email: "a@seneca.com",
+				password: "1234",
+			}
+		];
+
+		module.exports = {
+			users
+		}
+		
+	- Go to Thunder Client and create a post request with the following address:
+	
+		http://localhost:3000/register
+		
+		Make sure to add the following in the body of the POST request
+		
+			{
+			  "email":"b@seneca.com",
+			  "password": "1234"
+			}
+		
+3. Next step would be to hash the password to make sure passwords are not stored in plain text on the server
+
+	- Install bcrypt:
+	
+		npm install bcrypt
+		
+	- Update index.js with the following code:
+	
+		const express = require("express");
+		const { users } = require("./data.js");
+		const bcrypt = require("bcrypt");
+
+		const app = express();
+
+		app.use(express.json());
+
+		app.get("/", (req, res) => {
+		  res.send("Hello from the server");
+		});
+
+		app.post("/register", async (req, res) => {
+		  const { email, password } = req.body;
+
+		  const user = users.find((user) => {
+			return user.email === email;
+		  });
+
+		  if (user) {
+			return res.status(400).json({
+			  errors: [
+				{
+				  msg: "User already exists",
+				},
+			  ],
+			});
+		  }
+
+		  const hashPassword = await bcrypt.hash(password, 10);
+
+		  users.push({
+			email,
+			password: hashPassword,
+		  });
+
+		  return res.send("User registered!");
+		});
+
+		app.get("/all", (req, res) => {
+		  res.json(users);
+		});
+
+		app.listen(3000, () => {
+		  console.log("Server running on port 3000");
+		});
+
+	- We also created an extra route to check if all the users can be returned or not
+	
+	- Create a new GET request in Thunder Client to ensure that all the users are returned
+	
+		http://localhost:3000/all
+		
+4. JSON Web Tokens are a way to authenticate users through servers.
+
+	- Install JWT using the following command:
+	
+		npm install jsonwebtoken
+		
+	- Once install import using 
+	
+		const jwt = require("jsonwebtoken");
+		
+	- Let's now create another route that'd help us in generating a JWT token from the server:
+	
+		app.post("/login", (req, res)=>{
+
+			const email = req.body.email;
+			jwt.sign(email, secret, (err, token) =>{
+				return res.json({token});
+			});
+		});
+		
+	Try to run this using a new post request in Thunder Client by putting email and password in the body:
+	
+		{
+		  "email":"steve@seneca.com",
+		  "password": "1234"
+		}
+		
+	Above would return a token like this below:
+	
+		{
+		  "token": "eyJhbGciOiJIUzI1NiJ9.c3RldmVAc2VuZWNhLmNvbQ.q7rjy0N0rr1LWUopKvtADsnMuZ1q3fIGjMBuHgXj0oo"
+		}
+	
+5. Let's now test our token but embeding this token into the header of our post request:
+
+	- add the following code to your index.js
+	
+		app.post("/profile", verifyToken, (req, resp) =>{
+
+		});
+
+		function verifyToken(req, res, next)
+		{
+			const header = req.headers['authorization'];
+
+			if (typeof header === 'undefined')
+			{
+				return res.json({message:"no valid token available"});
+			}
+			else
+			{
+				return res.json({message:"token available"});
+			}
+		}
+		
+	- Create a POST request in Thunder Client and pass to its header the following:
+	
+		Authorization: bearer eyJhbGciOiJIUzI1NiJ9.c3RldmVAc2VuZWNhLmNvbQ.q7rjy0N0rr1LWUopKvtADsnMuZ1q3fIGjMBuHgXj0oo
+		
+	Test above with and without token to see the verifyToken function is working
+	
+
+6. It is important to verify token using JWT before server can perform any other operation. Update index.js with following
+
+	- Add following to index.js in addition to previous code (update app.post and verifyToken)
+	
+		app.post("/profile", verifyToken, (req, res) => {
+		  jwt.verify(req.token, secret, (err, data) => {
+			if (err) return res.json({ message: "error authenticating" });
+			else {
+			  res.json({ message: "Profile Accessed" });
+			}
+		  });
+		});
+
+		function verifyToken(req, res, next) {
+		  const header = req.headers["authorization"];
+
+		  if (typeof header === "undefined") {
+			return res.json({ message: "no valid token available" });
+		  } else {
+			const token = header.split(" ")[1];
+			console.log(token);
+			req.token = token;
+			next();
+		  }
+		}
+		
+7. Let's now check our API through a Front End Angular App.
+
+	- Create a Service that fetches data from the API
+	
+		import { Injectable } from '@angular/core';
+		import { HttpClient, HttpHeaders } from '@angular/common/http';
+		import { Router } from '@angular/router';
+
+		@Injectable({
+		  providedIn: 'root'
+		})
+		export class UserService {
+
+		  constructor(private http: HttpClient, private router: Router) { }
+
+		  login(data: any){
+			this.http.post("http://localhost:3000/login", data).subscribe((result: any) =>{
+			  console.log(result);
+			  localStorage.setItem("token", result.token);
+
+			  this.router.navigate(["/profile"]);
+			})
+		  }
+
+		  profile()
+		  {
+			let headers = new HttpHeaders().set("Authorization", `bearer ${localStorage.getItem("token")}`);
+			this.http.post("http://localhost:3000/profile", {}, {headers}).subscribe((result: any) =>{
+
+
+			})
+		  }
+
+		}
+
+
+	- Create a Login Component:
+	
+		- login.html
+		
+			<div class="container-fluid my-3 col-4">
+			  <form #login="ngForm" (ngSubmit)="formLogin(login.value)">
+				<div class="mb-3">
+				  <label for="formGroupExampleInput" class="form-label">Email</label>
+				  <input
+					type="text"
+					class="form-control"
+					id="formGroupExampleInput"
+					placeholder="Enter email"
+					ngModel
+					name="email"
+				  />
+				</div>
+				<div class="mb-3">
+				  <label for="formGroupExampleInput2" class="form-label">Password</label>
+				  <input
+					type="text"
+					class="form-control"
+					id="formGroupExampleInput2"
+					placeholder="Enter Password"
+					ngModel
+					name="password"
+				  />
+				</div>
+				<div class="d-grid gap-2 col-6 mx-auto">
+					<button class="btn btn-primary" type="submit">Login</button>
+
+				  </div>
+			  </form>
+			</div>
+			
+		- login.ts
+		
+			import { Component } from '@angular/core';
+			import { UserService } from 'src/app/services/user.service';
+
+			@Component({
+			  selector: 'app-login',
+			  templateUrl: './login.component.html',
+			  styleUrls: ['./login.component.css']
+			})
+			export class LoginComponent {
+
+			  constructor(private userService: UserService) {}
+			  
+			  formLogin(myForm: any)
+			  {
+				this.userService.login(myForm);
+			  }
+
+			}
+
+	- Create a Profile Component
+		
+		- profile.html
+		
+			<p>profile works!</p>
+
+		- profile.ts
+		
+			import { Component } from '@angular/core';
+			import { UserService } from 'src/app/services/user.service';
+
+			@Component({
+			  selector: 'app-profile',
+			  templateUrl: './profile.component.html',
+			  styleUrls: ['./profile.component.css']
+			})
+			export class ProfileComponent {
+
+			  constructor(private userService: UserService) {
+				userService.profile();
+			  }
+			}
+			
+	- Make sure to have your app.module.ts look like this:
+	
+		import { NgModule } from '@angular/core';
+		import { BrowserModule } from '@angular/platform-browser';
+		import { FormsModule } from '@angular/forms';
+		import { AppRoutingModule } from './app-routing.module';
+		import { AppComponent } from './app.component';
+		import { LoginComponent } from './componenets/login/login.component';
+		import { ProfileComponent } from './componenets/profile/profile.component';
+		import {HttpClientModule} from "@angular/common/http"
+
+		@NgModule({
+		  declarations: [
+			AppComponent,
+			LoginComponent,
+			ProfileComponent
+		  ],
+		  imports: [
+			BrowserModule,
+			AppRoutingModule, 
+			FormsModule,
+			HttpClientModule
+		  ],
+		  providers: [],
+		  bootstrap: [AppComponent]
+		})
+		export class AppModule { }
+		
+		
+	- Add routes to the app-routing.module.ts
+	
+		import { NgModule } from '@angular/core';
+		import { RouterModule, Routes } from '@angular/router';
+		import { LoginComponent } from './componenets/login/login.component';
+		import { ProfileComponent } from './componenets/profile/profile.component';
+
+		const routes: Routes = [
+		  {
+			path:"", component:LoginComponent
+		  },
+		  {
+			path:"profile", component:ProfileComponent
+		  }
+		];
+
+		@NgModule({
+		  imports: [RouterModule.forRoot(routes)],
+		  exports: [RouterModule]
+		})
+		export class AppRoutingModule { }
+		
+		
+	- Add router outlet to app.html
+	
+		<router-outlet></router-outlet>
+
+
